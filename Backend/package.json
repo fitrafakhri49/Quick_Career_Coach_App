@@ -4,18 +4,28 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev src/app.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^7.0.1",
+    "@anthropic-ai/sdk": "^0.71.0",
+    "@google/genai": "^1.30.0",
+    "@prisma/client": "^6.19.0",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
+    "@types/multer": "^2.0.0",
+    "axios": "^1.13.2",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "mammoth": "^1.11.0",
     "multer": "^2.0.2",
-    "prisma": "^7.0.1"
+    "openai": "^6.9.1",
+    "pdf-parse": "^2.4.5",
+    "prisma": "^6.19.0"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
