@@ -9,12 +9,6 @@ export default function PostCVPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleLogout = () => {
-    document.cookie = "token=; Max-Age=0; path=/"; // hapus cookie
-    localStorage.removeItem("access_token"); // hapus localStorage
-    window.location.href = "/login"; // pindah ke login
-  };
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFile(e.target.files[0]);
@@ -54,15 +48,6 @@ export default function PostCVPage() {
 
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-6">
-      <div className="flex justify-end">
-        <button
-          onClick={handleLogout}
-          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 cursor-pointer"
-        >
-          Logout
-        </button>
-      </div>
-
       <h1 className="text-3xl font-bold text-center">Upload CV for Analysis</h1>
 
       <form
