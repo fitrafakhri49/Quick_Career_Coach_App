@@ -15,12 +15,13 @@ interface AnalysisResultProps {
   result: any;
   back: () => void;
 }
+
 export default function Analysis_Result() {
   const [result, setResult] = useState<any>(null);
   const [viewAll, setViewAll] = useState(false);
 
   const renderStars = (scoreStr: string) => {
-    const score = parseFloat(scoreStr) || 0; // skor 0-10
+    const score = parseFloat(scoreStr) || 0;
     const stars = [];
 
     for (let i = 1; i <= 10; i++) {
