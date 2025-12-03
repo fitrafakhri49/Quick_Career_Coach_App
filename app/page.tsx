@@ -47,6 +47,8 @@ export default function LandingCVPage() {
         "analysis",
         JSON.stringify(data.extract.analysis.suggestions)
       );
+
+      localStorage.setItem("cv_paragraph", data.parsedText);
       window.location.href = "/Analysis-Result";
     } catch (err: any) {
       setError(err.response?.data?.error || "Error connecting to server");

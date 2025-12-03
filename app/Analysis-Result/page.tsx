@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { ArrowBigLeft } from "lucide-react";
+import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -40,6 +40,7 @@ export default function Analysis_Result() {
   };
   const back = () => {
     localStorage.removeItem("analysis");
+    localStorage.removeItem("cv_paragraph");
     window.location.href = "/";
   };
 
@@ -131,6 +132,15 @@ export default function Analysis_Result() {
             </CardContent>
           </Card>
         )}
+      </div>
+      <div className="flex justify-end mt-6">
+        <Button
+          variant="ghost"
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => (window.location.href = "/Interview")}
+        >
+          NEXT <ArrowBigRight />
+        </Button>
       </div>
     </div>
   );
