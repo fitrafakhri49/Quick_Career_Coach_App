@@ -8,7 +8,7 @@ datasource db {
 }
 
 model CVHistory {
-  id        Int      @id
+  id        String   @id @default(uuid())
   text      String
   analysis  Json
   createdAt DateTime @default(now())

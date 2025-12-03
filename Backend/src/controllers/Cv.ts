@@ -28,33 +28,112 @@ export const analyzeCVFromFile = async (req: Request, res: Response) => {
 
     const cleanText = text.replace(/\\n/g, "\n");
     const paragraphText = cleanText.replace(/\r?\n/g, "\n\n"); 
+    const existing = await prisma.cVHistory.findFirst({
+      where: { text: paragraphText },
+    });
 
-    const prompt =`
-    Extract from this CV:
-      - Personal info (name, contact)
-      - Work experience (company, role, dates, descriptions)
-      - Education
-      - Skills
-      - Projects (if any)
-     
+    if (existing) {
+      return res.json({
+        success: true,
+        id: existing.id,
+        parsedText: paragraphText,
+        extract: existing.analysis,
+        cached: true, 
+      });
+    }
+
+    const prompt =` 
     CV Content:
     ${paragraphText}
-    and give suggestion like below according to uploaded cv
-    Overall Score: score/10   │
-│                                       │
-│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
-│                                       │
-│ 💡 Top Recommendations:               │
-│                                       │
-│ 🔴 HIGH PRIORITY                      │
-              │
-│                                       │
-│ 🟡 MEDIUM PRIORITY                    │
-│           │
-│ [View All 7 Suggestions]              │
-│ [Download Improvement Checklist]      │
-│                                       
-    Return as structured JSON.    
+    Extract from this CV:
+    - Personal info (name, contact)
+    - Work experience (company, role, dates, descriptions)
+    - Education
+    - Skills
+    - Projects (if any)
+    YOU MUST FOLLOW THESE RULES STRICTLY:
+
+1. RESPOND ONLY WITH VALID JSON.
+2. DO NOT WRITE ANY TEXT OUTSIDE JSON.
+3. DO NOT WRITE MARKDOWN OR EXPLANATIONS.
+4. DO NOT ADD SENTENCES BEFORE OR AFTER JSON.
+5. ALL FIELDS MUST EXIST EXACTLY AS IN THE TEMPLATE.
+6. USE "" FOR EMPTY STRING AND [] FOR EMPTY ARRAY.
+7. NEVER USE null.
+8. ALWAYS INCLUDE SUGGESTIONS.
+9. IF YOU ARE UNSURE, RETURN EMPTY STRING OR EMPTY ARRAY.
+    **OUTPUT FORMAT MUST BE IN JSON ONLY**
+
+    {
+      "analysis": {
+        "extracted_data": {
+          "personal_info": {
+            "name": "",
+            "contact": {
+              "email": "",
+              "phone": "",
+              "linkedin": "",
+              "location": ""
+            }
+          },
+          "work_experience": [
+            {
+              "company": "",
+              "role": "",
+              "dates": "",
+              "location": "",
+              "description": []
+            }
+          ],
+          "education": [
+            {
+              "degree": "",
+              "university": "",
+              "location": "",
+              "year": ""
+            }
+          ],
+          "skills": [],
+          "projects": []
+        },
+        "suggestions": {
+          "overall_score": "score/10",
+          "recommendations": {
+            "HIGH PRIORITY": [
+              {
+                "title": "",
+                "description": "",
+                "example": ""
+              }
+            ],
+            "MEDIUM PRIORITY": [
+              {
+                "title": "",
+                "description": "",
+                "example": ""
+              }
+            ],
+            "LOW PRIORITY": [
+              {
+                "title": "",
+                "description": "",
+                "example": ""
+              }
+            ]
+          }
+        }
+      }
+    }
+    
+
+Return as structured valid JSON.  
+**IMPORTANT RULES MUST BE OBEY:**
+- ONLY RETURN JSON DATA, WITH NO MARKDOWN
+- MAKE SURE ALL THE FIELD ABOVE HAVE RESPONSE IF NOT RETURN WITH EMPTY ARRAY
+- DONT USE NULL FOR ARRAY, ALWAYS USE []
+- ALWAYS GIVE SUGGESTION
+“Respond ONLY with valid JSON. No explanations. No text outside JSON.”
+“If a field has no data, use empty string or empty array.”
     `;
 
     const rawResult = await askGemini(prompt);
@@ -63,6 +142,8 @@ export const analyzeCVFromFile = async (req: Request, res: Response) => {
     let parsed;
     try {
       parsed = JSON.parse(cleanedResult);
+      
+      
     } catch (err) {
       return res.status(500).json({
         error: "Gemini response is not valid JSON",
@@ -78,7 +159,7 @@ export const analyzeCVFromFile = async (req: Request, res: Response) => {
       success: true,
       id: saved.id,
       parsedText: paragraphText,
-      analysis: parsed,
+      extract: parsed,
     });
 
   } catch (err) {

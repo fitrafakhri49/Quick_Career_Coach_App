@@ -9,15 +9,12 @@ if (!process.env.GEMINI_API_KEY) {
 
 const ai = new GoogleGenAI({ });
 
-export async function askGemini(promptText: string): Promise<string> {
+export async function askGemini(prompt: string): Promise<string> {
   try {
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: promptText,   
+      contents: prompt,   
     });
-
-
-
     return response.text || "";
   } catch (err: any) {
     console.error("askGemini Error:", err);

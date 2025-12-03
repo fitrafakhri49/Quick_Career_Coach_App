@@ -1,13 +1,9 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import { login,register } from "../controllers/auth";
 
 const router = Router();
 
-router.get('/', (req: Request, res: Response) => {
-  res.send('Hello World dari Express + TypeScript!');
-});
-
-router.get('/about', (req: Request, res: Response) => {
-  res.json({ message: 'Ini halaman about' });
-});
+router.post('/login',login)
+router.post('/register',register)
 
 export default router;
