@@ -1,19 +1,15 @@
-// controllers/cvController.ts
 import { Request, Response } from "express";
 import path from "path";
 import { parseCV } from "../utils/pdfParser";
 import { askGemini } from "../services/Gemini";
 import { prisma } from "../prisma/client";
+import interviewStore from "../storage/interviewStore";
+
 
 function cleanAIResponse(raw: string): string {
   if (!raw) return "";
-
-
   let cleaned = raw.replace(/```json|```/g, "").trim();
-
- 
   cleaned = cleaned.replace(/\\n/g, "\n").replace(/\\t/g, "\t");
-
   return cleaned;
 }
 
@@ -23,11 +19,14 @@ export const analyzeCVFromFile = async (req: Request, res: Response) => {
 
     const ext = path.extname(req.file.originalname).toLowerCase();
     const text = await parseCV(req.file.path, ext);
+    
+    
 
     if (!text) return res.status(400).json({ error: "Failed to parse CV" });
 
     const cleanText = text.replace(/\\n/g, "\n");
     const paragraphText = cleanText.replace(/\r?\n/g, "\n\n"); 
+    interviewStore.paragraphText = paragraphText; // <-- SIMPAN OTOMATIS
     const existing = await prisma.cVHistory.findFirst({
       where: { text: paragraphText },
     });
