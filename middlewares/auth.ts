@@ -4,13 +4,11 @@ import type { NextRequest } from "next/server";
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
 
-  // Jika ke root "/", selalu redirect ke /login
   if (req.nextUrl.pathname === "/") {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // Proteksi halaman private
-  const protectedRoutes = ["/dashboard"];
+  const protectedRoutes = ["/"];
 
   if (protectedRoutes.includes(req.nextUrl.pathname)) {
     if (!token) {
@@ -22,5 +20,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/dashboard"],
+  matcher: ["/"],
 };

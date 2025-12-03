@@ -2,22 +2,26 @@
 
 import { useState } from "react";
 import axios from "axios";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-export default function PostCVPage() {
+export default function LandingCVPage() {
   const [file, setFile] = useState<File | null>(null);
-  const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const handleLogout = () => {
-    document.cookie = "token=; Max-Age=0; path=/"; // hapus cookie
-    localStorage.removeItem("access_token"); // hapus localStorage
-    window.location.href = "/login"; // pindah ke login
-  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFile(e.target.files[0]);
+      setError(null);
     }
   };
 
@@ -26,7 +30,6 @@ export default function PostCVPage() {
     if (!file) return setError("Please select a file");
 
     setLoading(true);
-    setError(null);
 
     const formData = new FormData();
     formData.append("cv", file);
@@ -40,60 +43,116 @@ export default function PostCVPage() {
         }
       );
 
-      setResult(data);
+      localStorage.setItem(
+        "analysis",
+        JSON.stringify(data.extract.analysis.suggestions)
+      );
+      window.location.href = "/Analysis-Result";
     } catch (err: any) {
-      if (err.response?.data?.error) {
-        setError(err.response.data.error);
-      } else {
-        setError("Error connecting to server");
-      }
+      setError(err.response?.data?.error || "Error connecting to server");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
-      <div className="flex justify-end">
-        <button
-          onClick={handleLogout}
-          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 cursor-pointer"
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex flex-col items-center p-6">
+      <header className="w-full max-w-5xl flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-extrabold text-blue-700">
+          Quick Career Coach
+        </h1>
+        <Button
+          className="cursor-pointer"
+          variant="destructive"
+          onClick={() => {
+            document.cookie = "token=; Max-Age=0; path=/";
+            localStorage.removeItem("access_token");
+            window.location.href = "/login";
+          }}
         >
           Logout
-        </button>
-      </div>
+        </Button>
+      </header>
 
-      <h1 className="text-3xl font-bold text-center">Upload CV for Analysis</h1>
+      <Card className="w-full max-w-4xl shadow-lg border border-gray-200">
+        <CardHeader>
+          <CardTitle>AI-powered Career Coaching</CardTitle>
+          <CardDescription>
+            Upload your CV and get personalized feedback to level up your
+            career.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-4"
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              e.preventDefault();
+              if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                setFile(e.dataTransfer.files[0]);
+                setError(null);
+              }
+            }}
+          >
+            <div
+              className={`flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-10 cursor-pointer hover:border-blue-500 transition-colors ${
+                file ? "bg-blue-50" : "bg-white"
+              }`}
+              onClick={() => document.getElementById("cvInput")?.click()}
+            >
+              <p className="text-gray-500 mb-2">
+                {file
+                  ? `Selected file: ${file.name}`
+                  : "Drag & drop your CV here"}
+              </p>
+              <p className="text-gray-400 text-sm">or click to select a file</p>
+            </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-4 cursor-pointer"
-      >
-        <input
-          className="cursor-pointer"
-          type="file"
-          accept=".pdf,.doc,.docx"
-          onChange={handleFileChange}
-        />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
-          disabled={loading}
-        >
-          {loading ? "Analyzing..." : "Submit CV"}
-        </button>
-      </form>
+            <input
+              id="cvInput"
+              type="file"
+              accept=".pdf,.doc,.docx"
+              onChange={handleFileChange}
+              className="hidden"
+            />
 
-      {error && <p className="text-red-500">{error}</p>}
+            <Button
+              className="cursor-pointer w-full"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? "Analyzing..." : "Submit CV"}
+            </Button>
+          </form>
+          {error && <p className="text-red-600 mt-2">{error}</p>}
+        </CardContent>
+      </Card>
 
-      {result && (
-        <div className="bg-gray-100 p-4 rounded space-y-2">
-          <h2 className="font-bold text-xl">CV Analysis Result</h2>
-          <pre className="overflow-x-auto text-sm">
-            {JSON.stringify(result.analysis, null, 2)}
-          </pre>
-        </div>
-      )}
+      <section className="w-full max-w-4xl mt-12 grid md:grid-cols-3 gap-6">
+        <Card className="text-center p-4 shadow-sm border">
+          <CardTitle>Upload CV</CardTitle>
+          <CardDescription>
+            Get instant AI-driven analysis of your resume.
+          </CardDescription>
+        </Card>
+        <Card className="text-center p-4 shadow-sm border">
+          <CardTitle>Practice Mock Interviews</CardTitle>
+          <CardDescription>
+            Prepare for interviews with AI-generated questions.
+          </CardDescription>
+        </Card>
+        <Card className="text-center p-4 shadow-sm border">
+          <CardTitle>Identify Skill Gaps</CardTitle>
+          <CardDescription>
+            Understand what skills to improve to boost your career.
+          </CardDescription>
+        </Card>
+      </section>
+
+      <footer className="mt-12 text-gray-500">
+        Supported formats: PDF, DOCX | Max file size: 5MB
+      </footer>
     </div>
   );
 }
