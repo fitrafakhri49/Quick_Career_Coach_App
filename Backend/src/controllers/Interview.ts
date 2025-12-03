@@ -2,27 +2,17 @@ import { supabase } from "../supabase/client";
 import { Request, Response } from "express";
 import { askGemini } from "../services/Gemini";
 import { prisma } from "../prisma/client";
-import interviewStore from "../storage/interviewStore";
-// function escapeForPrompt(s: string) {
-//     if (!s) return "";
-//     return s
-//       .replace(/\\/g, "\\\\")
-//       .replace(/"/g, '\\"')
-//       .replace(/\r/g, "")
-//       .replace(/\n/g, "\\n");
-//   }
+
 export async function interview(req: Request, res: Response) {
     try {
-      const { role,level, answers} = req.body;
-      const parsed_from_CV=interviewStore.paragraphText
-      if (!interviewStore.paragraphText) {
+      const { role,level,parsedCv, answers} = req.body;
+
+    if (!parsedCv) {
         return res.status(400).json({
           success: false,
-          message: "parsedText (CV text) is required. Send paragraphText from analyzeCV step."
+          message: "parsedText (CV text) is required.",
         });
       }
-      console.log(parsed_from_CV);
-      
       const isAnswerStage = Array.isArray(answers) && answers.length === 3;
   
   
@@ -33,7 +23,7 @@ export async function interview(req: Request, res: Response) {
   Generate exactly 3 HR-style questions based on this job role:
   Role: ${role}
   Level:${level}
-  Candidate CV:${parsed_from_CV}
+  Candidate CV:${parsedCv}
   Include:
 1. Behavioral question (STAR format)
 2. Technical question (role-specific)
@@ -59,7 +49,7 @@ export async function interview(req: Request, res: Response) {
 
 
   Context:
-- Candidate's experience: ${parsed_from_CV}
+- Candidate's experience: ${parsedCv}
 - Role level: ${level}
 
 Return questions yang realistic & commonly asked
@@ -81,10 +71,7 @@ Return questions yang realistic & commonly asked
   
         return res.json({ success: true, result: parsed });
       }
-  
-      // ------------------------------
-      // STEP 2 → Provide Feedback
-      // ------------------------------
+
   
       const a1 = String(answers[0] || "");
       const a2 = String(answers[1] || "");
