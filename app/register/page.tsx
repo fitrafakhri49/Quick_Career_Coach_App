@@ -22,7 +22,6 @@ export default function RegisterPage() {
         password,
       });
 
-      // Jika berhasil, arahkan ke login
       window.location.href = "/login";
     } catch (err: any) {
       setError(err.response?.data?.error || "Register gagal");

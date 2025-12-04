@@ -22,14 +22,11 @@ export default function LoginPage() {
 
       const token = res.data.session.access_token;
 
-      // simpan ke localStorage (optional)
       localStorage.setItem("access_token", token);
 
-      // simpan ke cookies (WAJIB untuk middleware)
       document.cookie = `token=${token}; path=/`;
 
-      // redirect ke dashboard
-      window.location.href = "/";
+      window.location.href = "/dashboard";
     } catch (err: any) {
       setError(err.response?.data?.error || "Login gagal");
     } finally {

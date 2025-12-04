@@ -4,6 +4,7 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
+import {} from "@/components/privateRoute";
 export default function Interview() {
   const [role, setRole] = useState("");
   const [level, setLevel] = useState("");

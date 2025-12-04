@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
 
 export default function SkillAnalysisPage() {
-  const [targetRole, setTargetRole] = useState("Telecommunication Engineer");
-  const [analysis, setAnalysis] = useState<any>(null); // tanpa interface
+  const [targetRole, setTargetRole] = useState("");
+  const [analysis, setAnalysis] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
