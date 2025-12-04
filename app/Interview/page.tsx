@@ -186,6 +186,13 @@ export default function Interview() {
           )}
         </CardContent>
       </Card>
+      <button
+        onClick={() => (window.location.href = "/SkillAnalysis")}
+        className="absolute -bottom-6 right-0 flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-black cursor-pointer"
+      >
+        <ArrowBigRight className="w-5 h-5" />
+        Next
+      </button>
     </div>
   );
 }
