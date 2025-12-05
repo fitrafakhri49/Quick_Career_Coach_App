@@ -4,7 +4,10 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
-import {} from "@/components/privateRoute";
+
+// import {} from "@/components/privateRoute";
+import Link from "next/link";
+
 export default function Interview() {
   const [role, setRole] = useState("");
   const [level, setLevel] = useState("");
@@ -79,22 +82,19 @@ export default function Interview() {
 
   return (
     <div className="max-w-xl mx-auto mt-10 px-4 relative">
-      <button
-        onClick={() => (window.location.href = "/Analysis-Result")}
-        className="absolute -top-6 left-0 flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-black cursor-pointer"
-      >
-        <ArrowBigLeft className="w-5 h-5" />
-        Back
-      </button>
-
       <Card className="border shadow-md mt-10">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Interview Stage</CardTitle>
+          <CardTitle
+            className="text-2xl font-bold"
+            style={{ color: "#0118D8" }}
+          >
+            Interview Stage
+          </CardTitle>
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6" style={{ color: "#1B56FD" }}>
           <div className="space-y-2">
-            <label className="font-semibold">Role</label>
+            <label className="font-semibold mb-5">Role</label>
             <input
               className="w-full border rounded p-2"
               placeholder="Frontend Developer"
@@ -119,7 +119,7 @@ export default function Interview() {
             <Button
               onClick={handleStart}
               disabled={loading || !role || !level}
-              className="w-full"
+              className="w-full bg-blue-700"
             >
               {loading ? "Generating..." : "Start Interview"}
             </Button>
@@ -187,13 +187,6 @@ export default function Interview() {
           )}
         </CardContent>
       </Card>
-      <button
-        onClick={() => (window.location.href = "/SkillAnalysis")}
-        className="absolute -bottom-6 right-0 flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-black cursor-pointer"
-      >
-        <ArrowBigRight className="w-5 h-5" />
-        Next
-      </button>
     </div>
   );
 }
