@@ -123,7 +123,7 @@ export default function SkillAnalysisPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-[#0118D8] mb-4">
             AI Skill Gap Analysis
           </h1>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
@@ -164,7 +164,7 @@ export default function SkillAnalysisPage() {
                       </p>
                       <p className="text-sm mt-1">
                         {cvAvailable
-                          ? "Your CV is ready for analysis"
+                          ? "Your Skill is ready to be analyze"
                           : "Upload your CV first to analyze skills"}
                       </p>
                     </div>

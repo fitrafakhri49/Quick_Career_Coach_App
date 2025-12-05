@@ -272,7 +272,7 @@ export default function Analysis_Result() {
                 </div>
 
                 <div className="space-y-4">
-                  <Link href="/">
+                  <Link href="/dashboard">
                     <Button className="gap-3 px-8 py-6 text-lg h-auto bg-[#0118D8] text-white hover:bg-[#1B4CFF] cursor-pointer">
                       <TrendingUp className="w-6 h-6" />
                       Upload Your CV for Analysis
