@@ -7,38 +7,38 @@ import interviewStore from "../storage/interviewStore";
 import { cleanAIResponse } from "../utils/cleanAIResponse";
 
 
-export async function parseCv (req: Request, res: Response){
-    try {
-      
-      if (!req.file) {
-        return res.status(400).json({ error: "File missing" });
-      }
-  
-      const ext = path.extname(req.file.originalname).toLowerCase();
-  
-      const text = await parseCV(req.file.path, ext);
-  
-      if (!text) {
-        return res.status(400).json({ error: "Failed to parse CV" });
-      }
-      const cleanText = text.replace(/\\n/g, "\n");
-      const paragraphText = cleanText.replace(/\r?\n/g, "\n\n");
-  
-      return res.json({
-        success: true,
-        rawText: text,
-        cleanText: paragraphText,
-      });
-  
-    } catch (error) {
-      console.error("parseCv error:", error);
-      return res.status(500).json({
-        error: "Failed to parse CV",
-        detail: error instanceof Error ? error.message : String(error),
-      });
+export async function parseCv(req: Request, res: Response) {
+  try {
+
+    if (!req.file) {
+      return res.status(400).json({ error: "File missing" });
     }
-  };
-  
+
+    const ext = path.extname(req.file.originalname).toLowerCase();
+
+    const text = await parseCV(req.file.path, ext);
+
+    if (!text) {
+      return res.status(400).json({ error: "Failed to parse CV" });
+    }
+    const cleanText = text.replace(/\\n/g, "\n");
+    const paragraphText = cleanText.replace(/\r?\n/g, "\n\n");
+
+    return res.json({
+      success: true,
+      rawText: text,
+      cleanText: paragraphText,
+    });
+
+  } catch (error) {
+    console.error("parseCv error:", error);
+    return res.status(500).json({
+      error: "Failed to parse CV",
+      detail: error instanceof Error ? error.message : String(error),
+    });
+  }
+};
+
 
 
 export const getAnalyze = async (req: Request, res: Response) => {
@@ -72,7 +72,7 @@ export const getAnalyze = async (req: Request, res: Response) => {
 
 export async function analyzeCV(req: Request, res: Response) {
   try {
-    const {parsedCv} = req.body;
+    const { parsedCv } = req.body;
 
     if (!parsedCv) {
       return res.status(400).json({ error: "parsedCv (raw CV text) is required" });
@@ -82,7 +82,7 @@ export async function analyzeCV(req: Request, res: Response) {
     const paragraphText = cleanText.replace(/\r?\n/g, "\n\n");
 
 
-    
+
     const existing = await prisma.cVHistory.findFirst({
       where: { text: paragraphText },
     });
@@ -97,7 +97,7 @@ export async function analyzeCV(req: Request, res: Response) {
       });
     }
 
-    // PROMPT TIDAK DIUBAH!
+
     const prompt = ` 
     CV Content:
     ${paragraphText}
@@ -107,6 +107,8 @@ export async function analyzeCV(req: Request, res: Response) {
     - Education
     - Skills
     - Projects (if any)
+
+    
     YOU MUST FOLLOW THESE RULES STRICTLY:
 
 1. RESPOND ONLY WITH VALID JSON.
