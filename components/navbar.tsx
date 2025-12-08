@@ -18,6 +18,9 @@ export default function Navbar() {
     localStorage.removeItem("analysis");
     localStorage.removeItem("cv_paragraph");
     localStorage.removeItem("editedCV");
+    localStorage.removeItem("skill_analysis");
+    localStorage.removeItem("interview_feedback_data");
+    localStorage.removeItem("recent_roles");
   };
 
   return (

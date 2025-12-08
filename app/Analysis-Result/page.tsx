@@ -24,6 +24,9 @@ import {
   Building,
   Calendar,
   ChevronRight,
+  ChevronDown,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -80,6 +83,9 @@ export default function Analysis_Result() {
   const [analysis, setAnalysis] = useState<AnalysisData | null>(null);
   const [viewAll, setViewAll] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [expandedRecommendations, setExpandedRecommendations] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   // Get data from localStorage with key "analysis"
   useEffect(() => {
@@ -132,6 +138,14 @@ export default function Analysis_Result() {
     element.download = "coachahead-analysis-report.txt";
     document.body.appendChild(element);
     element.click();
+  };
+
+  const toggleRecommendation = (priority: string, index: number) => {
+    const key = `${priority}-${index}`;
+    setExpandedRecommendations((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
   };
 
   const renderStars = (scoreStr: string) => {
@@ -342,7 +356,12 @@ export default function Analysis_Result() {
             <Download className="w-4 h-4" />
             Download Report
           </Button>
-          <Link href="/skill-analysis"></Link>
+          <Link href="/skill-analysis">
+            <Button variant="outline" className="gap-2">
+              <Target className="w-4 h-4" />
+              Skill Analysis
+            </Button>
+          </Link>
         </div>
 
         {/* Two Column Layout */}
@@ -608,43 +627,93 @@ export default function Analysis_Result() {
                     <div className="space-y-4">
                       {items
                         .slice(0, viewAll ? items.length : 3)
-                        .map((item, index) => (
-                          <div
-                            key={index}
-                            className={`p-4 rounded-lg border ${
-                              priority === "HIGH PRIORITY"
-                                ? "border-red-200 bg-red-50"
-                                : priority === "MEDIUM PRIORITY"
-                                ? "border-yellow-200 bg-yellow-50"
-                                : "border-green-200 bg-green-50"
-                            }`}
-                          >
-                            <div className="flex items-start gap-3">
-                              <div className="shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center border">
-                                <span className="text-gray-700 font-bold text-sm">
-                                  {index + 1}
-                                </span>
-                              </div>
-                              <div className="flex-1">
-                                <h4 className="font-bold text-gray-800 mb-2">
-                                  {item.title}
-                                </h4>
-                                <p className="text-gray-700 text-sm mb-3">
-                                  {item.description}
-                                </p>
-                                <div className="bg-white/80 p-3 rounded border">
-                                  <p className="text-sm font-medium text-blue-700 mb-1">
-                                    <Sparkles className="w-3 h-3 inline mr-1" />
-                                    Recommended Action
-                                  </p>
-                                  <p className="text-gray-600 text-sm italic">
-                                    "{item.example}"
-                                  </p>
+                        .map((item, index) => {
+                          const key = `${priority}-${index}`;
+                          const isExpanded =
+                            expandedRecommendations[key] || false;
+
+                          return (
+                            <div
+                              key={index}
+                              className={`p-4 rounded-lg border ${
+                                priority === "HIGH PRIORITY"
+                                  ? "border-red-200 bg-red-50"
+                                  : priority === "MEDIUM PRIORITY"
+                                  ? "border-yellow-200 bg-yellow-50"
+                                  : "border-green-200 bg-green-50"
+                              }`}
+                            >
+                              <div className="flex items-start gap-3">
+                                <div className="shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center border">
+                                  <span className="text-gray-700 font-bold text-sm">
+                                    {index + 1}
+                                  </span>
+                                </div>
+                                <div className="flex-1">
+                                  <div
+                                    className="cursor-pointer"
+                                    onClick={() =>
+                                      toggleRecommendation(priority, index)
+                                    }
+                                  >
+                                    <div className="flex items-start justify-between">
+                                      <h4 className="font-bold text-gray-800 mb-2 pr-2">
+                                        {item.title}
+                                      </h4>
+                                      <button className="text-gray-500 hover:text-gray-700 mt-0.5">
+                                        {isExpanded ? (
+                                          <ChevronDown className="w-4 h-4" />
+                                        ) : (
+                                          <Eye className="w-4 h-4" />
+                                        )}
+                                      </button>
+                                    </div>
+
+                                    {!isExpanded && (
+                                      <div className="flex items-center gap-2 mt-1">
+                                        <EyeOff className="w-3 h-3 text-gray-400" />
+                                        <span className="text-xs text-gray-500">
+                                          Click to view details
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {isExpanded && (
+                                    <div className="mt-4 space-y-3 animate-fadeIn">
+                                      <div>
+                                        <p className="text-sm text-gray-700 mb-1 font-medium">
+                                          Description:
+                                        </p>
+                                        <p className="text-gray-600 text-sm">
+                                          {item.description}
+                                        </p>
+                                      </div>
+                                      <div className="bg-white/80 p-3 rounded border">
+                                        <p className="text-sm font-medium text-blue-700 mb-1">
+                                          <Sparkles className="w-3 h-3 inline mr-1" />
+                                          Recommended Action
+                                        </p>
+                                        <p className="text-gray-600 text-sm italic">
+                                          "{item.example}"
+                                        </p>
+                                      </div>
+                                      <button
+                                        onClick={() =>
+                                          toggleRecommendation(priority, index)
+                                        }
+                                        className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                                      >
+                                        <EyeOff className="w-3 h-3" />
+                                        Hide details
+                                      </button>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                     </div>
                   </CardContent>
                 </Card>
@@ -735,6 +804,23 @@ export default function Analysis_Result() {
           </div>
         </div>
       </div>
+
+      {/* Add custom CSS for fade-in animation */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out;
+        }
+      `}</style>
     </div>
   );
 }
