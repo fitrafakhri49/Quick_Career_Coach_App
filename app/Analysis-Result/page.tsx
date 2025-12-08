@@ -158,7 +158,7 @@ export default function Analysis_Result() {
         </div>
         <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-blue-400 to-blue-300 rounded-full transition-all duration-500"
+            className="h-full bg-linear-to-r from-blue-400 to-blue-300 rounded-full transition-all duration-500"
             style={{ width: `${percentage}%` }}
           />
         </div>
@@ -209,7 +209,7 @@ export default function Analysis_Result() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-4 md:p-8 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-b from-gray-50 to-white p-4 md:p-8 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading analysis...</p>
@@ -220,7 +220,7 @@ export default function Analysis_Result() {
 
   if (!analysis) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-4 md:p-8">
+      <div className="min-h-screen bg-linear-to-b from-gray-50 to-white p-4 md:p-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center space-y-4 mb-12">
             <h1 className="text-3xl md:text-4xl font-bold text-[#0118D8]">
@@ -253,19 +253,19 @@ export default function Analysis_Result() {
                   </h3>
                   <ul className="space-y-3 text-left max-w-md mx-auto">
                     <li className="flex items-center gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
                       <span>Personalized CV score and feedback</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
                       <span>Priority-based improvement recommendations</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
                       <span>Skill gap analysis</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
                       <span>Downloadable report</span>
                     </li>
                   </ul>
@@ -288,7 +288,7 @@ export default function Analysis_Result() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-4 md:p-8">
+    <div className="min-h-screen bg-linear-to-b from-gray-50 to-white p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center space-y-4 mb-8">
@@ -301,7 +301,7 @@ export default function Analysis_Result() {
         </div>
 
         {/* Score Card - Full width at top */}
-        <Card className="shadow-xl border-0 bg-gradient-to-r from-blue-600 to-indigo-600 text-white mb-8">
+        <Card className="shadow-xl border-0 bg-linear-to-r from-blue-600 to-indigo-600 text-white mb-8">
           <CardContent className="p-8">
             <div className="grid md:grid-cols-3 gap-8">
               <div className="md:col-span-2">
@@ -346,7 +346,7 @@ export default function Analysis_Result() {
         </div>
 
         {/* Two Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* Left Column - Personal Details & Summary */}
           <div className="lg:col-span-2 space-y-8">
             {/* Personal Details Card */}
@@ -430,7 +430,7 @@ export default function Analysis_Result() {
             </Card>
 
             {/* Summary Card */}
-            <Card className="shadow-lg border-0">
+            <Card className="shadow-lg border-0 ">
               <CardHeader className="pb-4 border-b">
                 <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-2">
                   <Target className="w-5 h-5" />
@@ -439,7 +439,7 @@ export default function Analysis_Result() {
               </CardHeader>
               <CardContent className="pt-6">
                 <div className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-500 mt-1 flex-shrink-0" />
+                  <CheckCircle className="w-6 h-6 text-green-500 mt-1 shrink-0" />
                   <div>
                     <p className="text-gray-700 leading-relaxed">
                       {getSummary()}
@@ -486,7 +486,7 @@ export default function Analysis_Result() {
                       key={index}
                       className="flex items-start gap-4 group hover:bg-gray-50 p-3 rounded-lg transition-colors"
                     >
-                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                      <div className="shrink-0 w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
                         <GraduationCap className="w-5 h-5 text-blue-600" />
                       </div>
                       <div className="flex-1">
@@ -559,7 +559,7 @@ export default function Analysis_Result() {
                               key={idx}
                               className="flex items-start gap-2 text-gray-700"
                             >
-                              <ChevronRight className="w-4 h-4 text-blue-500 mt-1 flex-shrink-0" />
+                              <ChevronRight className="w-4 h-4 text-blue-500 mt-1 shrink-0" />
                               <span>{desc}</span>
                             </li>
                           ))}
@@ -573,7 +573,7 @@ export default function Analysis_Result() {
           </div>
 
           {/* Right Column - Recommendations */}
-          <div className="space-y-8">
+          <div className="space-y-8 lg:sticky lg:top-24 self-start">
             {/* Priority Sections */}
             {priorityOrder.map((priority) => {
               const items =
@@ -620,7 +620,7 @@ export default function Analysis_Result() {
                             }`}
                           >
                             <div className="flex items-start gap-3">
-                              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center border">
+                              <div className="shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center border">
                                 <span className="text-gray-700 font-bold text-sm">
                                   {index + 1}
                                 </span>
@@ -669,7 +669,7 @@ export default function Analysis_Result() {
             </div>
 
             {/* Next Steps */}
-            <Card className="shadow-lg border-0 bg-gradient-to-br from-blue-50 to-indigo-50">
+            <Card className="shadow-lg border-0 bg-linear-to-br from-blue-50 to-indigo-50">
               <CardHeader className="pb-4">
                 <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-2">
                   <Zap className="w-5 h-5 text-blue-600" />

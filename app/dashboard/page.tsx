@@ -106,7 +106,7 @@ export default function Dashboard() {
 
       // Add a small delay for smooth transition
       setTimeout(() => {
-        window.location.href = "/Analysis-Result";
+        window.location.href = "/PreviewCv";
       }, 500);
     } catch (err: any) {
       setError(err.response?.data?.error || "Error analyzing CV");
@@ -142,7 +142,7 @@ export default function Dashboard() {
         </p>
         <div className="w-48 h-2 bg-gray-200 rounded-full mt-4 overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-300"
+            className="h-full bg-linear-to-br from-blue-500 to-purple-600 transition-all duration-300"
             style={{ width: `${progress}%` }}
           ></div>
         </div>
@@ -151,7 +151,7 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 relative overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50 relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute top-0 left-0 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
       <div className="absolute top-0 right-0 w-64 h-64 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
@@ -184,7 +184,7 @@ export default function Dashboard() {
           {/* Left Side - Upload Section */}
           <div className="lg:col-span-2">
             <Card className="shadow-2xl border-0 bg-white/80 backdrop-blur-sm overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+              <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-br from-blue-500 to-purple-500"></div>
               <CardHeader className="pb-6">
                 <div className="flex items-center gap-3 mb-2">
                   <Zap className="w-8 h-8 text-blue-600" />
@@ -283,7 +283,7 @@ export default function Dashboard() {
                   />
 
                   <Button
-                    className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                    className="w-full py-6 text-lg font-semibold bg-linear-to-br from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-[1.02] shadow-lg hover:shadow-xl"
                     type={parsedCV ? "button" : "submit"}
                     disabled={loading}
                     onClick={(e) => {
@@ -310,7 +310,7 @@ export default function Dashboard() {
                     ) : (
                       <>
                         <Sparkles className="w-5 h-5 mr-2" />
-                        Preview Your CV
+                        Upload Your CV
                       </>
                     )}
                   </Button>
@@ -326,7 +326,7 @@ export default function Dashboard() {
 
                 {/* Preview Section */}
                 {parsedCV && (
-                  <div className="mt-6 p-6 bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-200 shadow-inner">
+                  <div className="mt-6 p-6 bg-linear-to-br from-gray-50 to-white rounded-2xl border border-gray-200 shadow-inner">
                     <div className="flex items-center gap-2 mb-4">
                       <FileText className="w-5 h-5 text-blue-600" />
                       <h2 className="text-xl font-bold text-gray-800">
@@ -344,11 +344,11 @@ export default function Dashboard() {
                     ) : (
                       readyToSubmit && (
                         <Button
-                          className="mt-6 w-full py-6 text-lg font-semibold bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                          className="mt-6 w-full py-6 text-lg font-semibold bg-linear-to-br from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                           onClick={handleSubmitFinal}
                         >
                           <Target className="w-5 h-5 mr-2" />
-                          Get Complete Analysis
+                          Preview Your Cv
                         </Button>
                       )
                     )}
@@ -404,7 +404,7 @@ export default function Dashboard() {
             </Card>
 
             {/* Quick Tips */}
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-amber-50 to-orange-50">
+            <Card className="border-0 shadow-lg bg-linear-to-br from-amber-50 to-orange-50">
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-amber-600" />
@@ -473,7 +473,7 @@ export default function Dashboard() {
               >
                 <CardContent className="p-6">
                   <div
-                    className={`w-12 h-12 rounded-xl bg-gradient-to-r ${feature.gradient} flex items-center justify-center mb-4`}
+                    className={`w-12 h-12 rounded-xl bg-linear-to-br ${feature.gradient} flex items-center justify-center mb-4`}
                   >
                     <feature.icon className="w-6 h-6 text-white" />
                   </div>

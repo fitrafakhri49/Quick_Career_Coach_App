@@ -8,14 +8,16 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Dashboard", href: "/dashboard" },
+    { name: "Preview and Edit CV", href: "/PreviewCv" },
     { name: "Analysis CV", href: "/Analysis-Result" },
-    { name: "Interview", href: "/Interview" },
+    { name: "Interview", href: "/interview" },
     { name: "Skill Analysis", href: "/SkillAnalysis" },
   ];
 
   const handleResetLocalStorage = () => {
     localStorage.removeItem("analysis");
     localStorage.removeItem("cv_paragraph");
+    localStorage.removeItem("editedCV");
   };
 
   return (

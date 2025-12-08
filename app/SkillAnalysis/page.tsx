@@ -49,6 +49,10 @@ export default function SkillAnalysisPage() {
     if (savedRoles) {
       setRecentRoles(JSON.parse(savedRoles).slice(0, 5));
     }
+    const savedAnalysis = localStorage.getItem("skill_analysis");
+    if (savedAnalysis) {
+      setAnalysis(JSON.parse(savedAnalysis));
+    }
   }, []);
 
   const saveRecentRole = (role: string) => {
@@ -233,7 +237,7 @@ export default function SkillAnalysisPage() {
                 <Button
                   onClick={handleAnalyze}
                   disabled={loading || !cvAvailable}
-                  className="w-full gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                  className="w-full gap-2 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
                 >
                   {loading ? (
                     <>
@@ -260,19 +264,19 @@ export default function SkillAnalysisPage() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <Zap className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <Zap className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
                   <p className="text-sm text-gray-700">
                     Be specific with role titles for better analysis
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Clock className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <Clock className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
                   <p className="text-sm text-gray-700">
                     Analysis takes about 30-60 seconds
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Download className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <Download className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
                   <p className="text-sm text-gray-700">
                     Download your results for future reference
                   </p>
@@ -287,7 +291,7 @@ export default function SkillAnalysisPage() {
               <Card className="shadow-lg border-0 border-l-4 border-red-500 mb-6">
                 <CardContent className="p-6">
                   <div className="flex items-start gap-3">
-                    <XCircle className="w-6 h-6 text-red-500 flex-shrink-0 mt-0.5" />
+                    <XCircle className="w-6 h-6 text-red-500 shrink-0 mt-0.5" />
                     <div>
                       <h3 className="font-semibold text-red-700 mb-1">Error</h3>
                       <p className="text-gray-700">{error}</p>
@@ -300,7 +304,7 @@ export default function SkillAnalysisPage() {
             {analysis ? (
               <div className="space-y-6">
                 {/* Analysis Summary */}
-                <Card className="shadow-lg border-0 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                <Card className="shadow-lg border-0 bg-linear-to-r from-blue-600 to-indigo-600 text-white">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
@@ -348,7 +352,7 @@ export default function SkillAnalysisPage() {
                               key={index}
                               className="flex items-center gap-2 p-2 bg-green-50 rounded-lg"
                             >
-                              <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                              <CheckCircle className="w-4 h-4 text-green-500 shrink-0" />
                               <span className="text-gray-700">{skill}</span>
                             </div>
                           )
@@ -379,7 +383,7 @@ export default function SkillAnalysisPage() {
                               key={index}
                               className="flex items-center gap-2 p-2 bg-red-50 rounded-lg"
                             >
-                              <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
+                              <XCircle className="w-4 h-4 text-red-500 shrink-0" />
                               <span className="text-gray-700">{skill}</span>
                             </div>
                           )
@@ -412,7 +416,7 @@ export default function SkillAnalysisPage() {
                               key={index}
                               className="flex items-center gap-2 p-2 bg-yellow-50 rounded-lg"
                             >
-                              <Star className="w-4 h-4 text-yellow-500 flex-shrink-0" />
+                              <Star className="w-4 h-4 text-yellow-500 shrink-0" />
                               <span className="text-gray-700">{skill}</span>
                             </div>
                           )
@@ -444,7 +448,7 @@ export default function SkillAnalysisPage() {
                               className="group p-4 bg-gray-50 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
                             >
                               <div className="flex items-start gap-3">
-                                <BookOpen className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
+                                <BookOpen className="w-5 h-5 text-blue-600 mt-1 shrink-0" />
                                 <div>
                                   <p className="font-medium text-gray-900">
                                     {course}
@@ -481,7 +485,7 @@ export default function SkillAnalysisPage() {
                               className="group p-4 bg-gray-50 hover:bg-green-50 rounded-lg transition-colors cursor-pointer"
                             >
                               <div className="flex items-start gap-3">
-                                <Rocket className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+                                <Rocket className="w-5 h-5 text-green-600 mt-1 shrink-0" />
                                 <div>
                                   <p className="font-medium text-gray-900">
                                     {project}
@@ -527,7 +531,7 @@ export default function SkillAnalysisPage() {
               /* Placeholder/Instruction Card */
               <Card className="shadow-lg border-0 h-full">
                 <CardContent className="p-12 text-center">
-                  <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 flex items-center justify-center">
+                  <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-linear-to-r from-blue-100 to-indigo-100 flex items-center justify-center">
                     <Brain className="w-12 h-12 text-blue-600" />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">
