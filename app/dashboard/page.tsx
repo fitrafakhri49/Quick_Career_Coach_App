@@ -85,7 +85,6 @@ export default function Dashboard() {
 
   const handleSubmitFinal = async () => {
     const cvText = localStorage.getItem("cv_paragraph");
-
     if (!cvText) {
       setError("CV text not found. Please upload your CV again.");
       return;

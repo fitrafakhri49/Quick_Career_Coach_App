@@ -51,10 +51,6 @@ export const InterviewStart = ({
     });
   };
 
-  const handleUploadCV = () => {
-    router.push("/upload");
-  };
-
   return (
     <div className="max-w-2xl mx-auto p-6">
       <div className="bg-white rounded-xl shadow-lg p-8">
@@ -126,16 +122,16 @@ export const InterviewStart = ({
                   <p className="text-sm text-red-600">No CV found</p>
                 )}
               </div>
+
               <button
                 type="button"
-                onClick={handleUploadCV}
-                className="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-800"
+                onClick={() => router.push("/dashboard")}
+                className="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer"
               >
                 {hasCv ? "Change CV" : "Upload CV"}
               </button>
             </div>
           </div>
-
           {/* Error Message */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">

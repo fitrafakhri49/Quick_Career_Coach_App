@@ -29,6 +29,8 @@ import {
   EyeOff,
 } from "lucide-react";
 import Link from "next/link";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 interface RecommendationItem {
   title: string;
@@ -86,6 +88,7 @@ export default function Analysis_Result() {
   const [expandedRecommendations, setExpandedRecommendations] = useState<{
     [key: string]: boolean;
   }>({});
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   // Get data from localStorage with key "analysis"
   useEffect(() => {
@@ -128,16 +131,511 @@ export default function Analysis_Result() {
     setIsLoading(false);
   }, []);
 
-  const downloadReport = () => {
+  const generatePDFReport = async () => {
+    if (!analysis) return;
+
+    setIsGeneratingPDF(true);
+
+    try {
+      // Create PDF document
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      let yPos = 15;
+
+      // Add logo/header
+      pdf.setFillColor(1, 24, 216); // #0118D8
+      pdf.rect(0, 0, pageWidth, 25, "F");
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(24);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("CoachAhead", pageWidth / 2, 15, { align: "center" });
+      pdf.setFontSize(14);
+      pdf.text("CV Analysis Report", pageWidth / 2, 22, { align: "center" });
+
+      yPos = 35;
+
+      // Add report summary section
+      pdf.setTextColor(0, 0, 0);
+      pdf.setFillColor(240, 249, 255);
+      pdf.roundedRect(10, yPos, pageWidth - 20, 30, 3, 3, "F");
+
+      pdf.setFontSize(16);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Report Summary", 15, yPos + 8);
+
+      pdf.setFontSize(11);
+      pdf.setFont("helvetica", "normal");
+
+      const scoreMatch = analysis.suggestions.overall_score.match(/(\d+)\/10/);
+      const score = scoreMatch ? parseFloat(scoreMatch[1]) : 0;
+
+      pdf.text(
+        `Overall Score: ${analysis.suggestions.overall_score}`,
+        15,
+        yPos + 16
+      );
+      pdf.text(
+        `Generated: ${new Date().toLocaleDateString()}`,
+        pageWidth - 15,
+        yPos + 16,
+        { align: "right" }
+      );
+
+      const totalRecs = getTotalRecommendations();
+      pdf.text(`Total Recommendations: ${totalRecs}`, 15, yPos + 22);
+      pdf.text(
+        `High Priority Items: ${analysis.suggestions.recommendations["HIGH PRIORITY"].length}`,
+        pageWidth - 15,
+        yPos + 22,
+        { align: "right" }
+      );
+
+      yPos += 40;
+
+      // Personal Information
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Personal Information", 15, yPos);
+      yPos += 8;
+
+      pdf.setFontSize(11);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(`Name: ${analysis.extracted_data.personal_info.name}`, 20, yPos);
+      yPos += 6;
+      pdf.text(
+        `Email: ${analysis.extracted_data.personal_info.contact.email}`,
+        20,
+        yPos
+      );
+      yPos += 6;
+      pdf.text(
+        `Phone: ${analysis.extracted_data.personal_info.contact.phone}`,
+        20,
+        yPos
+      );
+      yPos += 6;
+      pdf.text(
+        `Location: ${analysis.extracted_data.personal_info.contact.location}`,
+        20,
+        yPos
+      );
+      yPos += 6;
+      pdf.text(
+        `LinkedIn: ${
+          analysis.extracted_data.personal_info.contact.linkedin ||
+          "Not provided"
+        }`,
+        20,
+        yPos
+      );
+      yPos += 10;
+
+      // Skills Section
+      if (yPos > pageHeight - 30) {
+        pdf.addPage();
+        yPos = 20;
+      }
+
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Skills Summary", 15, yPos);
+      yPos += 8;
+
+      pdf.setFontSize(11);
+      pdf.setFont("helvetica", "normal");
+
+      let xPos = 20;
+      analysis.extracted_data.skills.slice(0, 20).forEach((skill, index) => {
+        if (xPos + pdf.getStringUnitWidth(skill) * 2.5 > pageWidth - 20) {
+          yPos += 6;
+          xPos = 20;
+        }
+        pdf.text(`• ${skill}`, xPos, yPos);
+        xPos += pdf.getStringUnitWidth(`• ${skill} `) * 2.5;
+      });
+
+      yPos += 10;
+
+      // Education Section
+      if (yPos > pageHeight - 50) {
+        pdf.addPage();
+        yPos = 20;
+      }
+
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Education", 15, yPos);
+      yPos += 8;
+
+      analysis.extracted_data.education.forEach((edu, index) => {
+        if (yPos > pageHeight - 20) {
+          pdf.addPage();
+          yPos = 20;
+        }
+
+        pdf.setFontSize(11);
+        pdf.setFont("helvetica", "bold");
+        pdf.text(edu.degree, 20, yPos);
+        yPos += 6;
+
+        pdf.setFont("helvetica", "normal");
+        pdf.text(`${edu.university} | ${edu.year}`, 20, yPos);
+        yPos += 6;
+
+        if (edu.location) {
+          pdf.text(`Location: ${edu.location}`, 20, yPos);
+          yPos += 6;
+        }
+        yPos += 4;
+      });
+
+      // Work Experience
+      if (analysis.extracted_data.work_experience.length > 0) {
+        if (yPos > pageHeight - 50) {
+          pdf.addPage();
+          yPos = 20;
+        }
+
+        pdf.setFontSize(14);
+        pdf.setFont("helvetica", "bold");
+        pdf.text("Work Experience", 15, yPos);
+        yPos += 8;
+
+        analysis.extracted_data.work_experience.forEach((work, index) => {
+          if (yPos > pageHeight - 40) {
+            pdf.addPage();
+            yPos = 20;
+          }
+
+          pdf.setFontSize(11);
+          pdf.setFont("helvetica", "bold");
+          pdf.text(work.role, 20, yPos);
+          yPos += 6;
+
+          pdf.setFont("helvetica", "normal");
+          pdf.text(`${work.company} | ${work.dates}`, 20, yPos);
+          yPos += 6;
+
+          if (work.location) {
+            pdf.text(`Location: ${work.location}`, 20, yPos);
+            yPos += 6;
+          }
+
+          work.description.slice(0, 3).forEach((desc, idx) => {
+            if (yPos > pageHeight - 10) {
+              pdf.addPage();
+              yPos = 20;
+            }
+            pdf.text(`• ${desc}`, 25, yPos);
+            yPos += 6;
+          });
+
+          yPos += 4;
+        });
+      }
+
+      // Recommendations Section
+      pdf.addPage();
+      yPos = 20;
+
+      pdf.setFontSize(16);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Recommendations & Improvements", pageWidth / 2, yPos, {
+        align: "center",
+      });
+      yPos += 15;
+
+      // High Priority Recommendations
+      const highPriority =
+        analysis.suggestions.recommendations["HIGH PRIORITY"];
+      if (highPriority.length > 0) {
+        pdf.setFillColor(254, 226, 226); // Light red
+        pdf.rect(15, yPos, pageWidth - 30, 10, "F");
+        pdf.setFontSize(12);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(220, 38, 38); // Red
+        pdf.text("HIGH PRIORITY", 20, yPos + 7);
+        yPos += 15;
+
+        highPriority.forEach((item, index) => {
+          if (yPos > pageHeight - 30) {
+            pdf.addPage();
+            yPos = 20;
+          }
+
+          pdf.setFontSize(11);
+          pdf.setFont("helvetica", "bold");
+          pdf.setTextColor(0, 0, 0);
+          pdf.text(`${index + 1}. ${item.title}`, 20, yPos);
+          yPos += 6;
+
+          pdf.setFont("helvetica", "normal");
+          const descriptionLines = pdf.splitTextToSize(
+            item.description,
+            pageWidth - 40
+          );
+          descriptionLines.forEach((line: string) => {
+            pdf.text(line, 25, yPos);
+            yPos += 5;
+          });
+
+          yPos += 3;
+
+          pdf.setFont("helvetica", "italic");
+          pdf.setTextColor(59, 130, 246); // Blue
+          const exampleLines = pdf.splitTextToSize(
+            `Example: ${item.example}`,
+            pageWidth - 40
+          );
+          exampleLines.forEach((line: string) => {
+            pdf.text(line, 25, yPos);
+            yPos += 5;
+          });
+
+          yPos += 8;
+        });
+      }
+
+      // Medium Priority Recommendations
+      const mediumPriority =
+        analysis.suggestions.recommendations["MEDIUM PRIORITY"];
+      if (mediumPriority.length > 0 && yPos < pageHeight - 50) {
+        pdf.setFillColor(254, 249, 195); // Light yellow
+        pdf.rect(15, yPos, pageWidth - 30, 10, "F");
+        pdf.setFontSize(12);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(202, 138, 4); // Yellow
+        pdf.text("MEDIUM PRIORITY", 20, yPos + 7);
+        yPos += 15;
+
+        mediumPriority.slice(0, 3).forEach((item, index) => {
+          if (yPos > pageHeight - 30) {
+            pdf.addPage();
+            yPos = 20;
+          }
+
+          pdf.setFontSize(11);
+          pdf.setFont("helvetica", "bold");
+          pdf.setTextColor(0, 0, 0);
+          pdf.text(`${index + 1}. ${item.title}`, 20, yPos);
+          yPos += 6;
+
+          pdf.setFont("helvetica", "normal");
+          const descriptionLines = pdf.splitTextToSize(
+            item.description,
+            pageWidth - 40
+          );
+          descriptionLines.forEach((line: string) => {
+            pdf.text(line, 25, yPos);
+            yPos += 5;
+          });
+          yPos += 8;
+        });
+      }
+
+      // Footer
+      const totalPages = pdf.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        pdf.setPage(i);
+        pdf.setFontSize(10);
+        pdf.setTextColor(100, 100, 100);
+        pdf.setFont("helvetica", "italic");
+        pdf.text(`Page ${i} of ${totalPages}`, pageWidth / 2, pageHeight - 10, {
+          align: "center",
+        });
+        pdf.text(
+          "Generated by CoachAhead AI",
+          pageWidth - 15,
+          pageHeight - 10,
+          { align: "right" }
+        );
+      }
+
+      // Save PDF
+      const fileName = `coachahead_analysis_${analysis.extracted_data.personal_info.name.replace(
+        /\s+/g,
+        "_"
+      )}_${new Date().getTime()}.pdf`;
+      pdf.save(fileName);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      // Fallback to JSON download
+      downloadReportJSON();
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
+  const downloadReportJSON = () => {
     if (!analysis) return;
 
     const element = document.createElement("a");
     const text = JSON.stringify(analysis, null, 2);
     const file = new Blob([text], { type: "text/plain" });
     element.href = URL.createObjectURL(file);
-    element.download = "coachahead-analysis-report.txt";
+    element.download = `coachahead-analysis-${new Date().getTime()}.json`;
     document.body.appendChild(element);
     element.click();
+  };
+
+  const generateScreenshotPDF = async () => {
+    if (!analysis) return;
+
+    setIsGeneratingPDF(true);
+
+    try {
+      // Create a temporary container for PDF generation
+      const tempContainer = document.createElement("div");
+      tempContainer.style.position = "fixed";
+      tempContainer.style.left = "-9999px";
+      tempContainer.style.top = "0";
+      tempContainer.style.width = "800px";
+      tempContainer.style.backgroundColor = "white";
+      tempContainer.style.padding = "40px";
+      tempContainer.style.fontFamily = "Arial, sans-serif";
+
+      // Build HTML content for PDF
+      tempContainer.innerHTML = `
+        <div id="pdf-content">
+          <!-- Header -->
+          <div style="text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(to right, #0118D8, #1B4CFF); color: white; border-radius: 10px;">
+            <h1 style="font-size: 32px; margin: 0 0 10px 0; font-weight: bold;">CoachAhead</h1>
+            <h2 style="font-size: 24px; margin: 0; font-weight: 500;">CV Analysis Report</h2>
+            <p style="margin-top: 10px; font-size: 14px; opacity: 0.9;">Generated on ${new Date().toLocaleDateString()}</p>
+          </div>
+          
+          <!-- Score Summary -->
+          <div style="margin-bottom: 30px; padding: 20px; background: #f8fafc; border-radius: 10px; border-left: 5px solid #0118D8;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h3 style="font-size: 20px; margin: 0; color: #0118D8; font-weight: bold;">Overall Score</h3>
+              <div style="background: #0118D8; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold;">
+                ${analysis.suggestions.overall_score}
+              </div>
+            </div>
+            <div style="display: flex; gap: 30px;">
+              <div>
+                <p style="margin: 5px 0; font-size: 14px;"><strong>Name:</strong> ${
+                  analysis.extracted_data.personal_info.name
+                }</p>
+                <p style="margin: 5px 0; font-size: 14px;"><strong>Email:</strong> ${
+                  analysis.extracted_data.personal_info.contact.email
+                }</p>
+              </div>
+              <div>
+                <p style="margin: 5px 0; font-size: 14px;"><strong>Total Recommendations:</strong> ${getTotalRecommendations()}</p>
+                <p style="margin: 5px 0; font-size: 14px;"><strong>High Priority:</strong> ${
+                  analysis.suggestions.recommendations["HIGH PRIORITY"].length
+                }</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Skills -->
+          <div style="margin-bottom: 30px;">
+            <h3 style="font-size: 20px; margin: 0 0 15px 0; color: #0118D8; font-weight: bold; padding-bottom: 10px; border-bottom: 2px solid #e5e7eb;">Skills</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              ${analysis.extracted_data.skills
+                .slice(0, 20)
+                .map(
+                  (skill) => `
+                <span style="background: #dbeafe; color: #1e40af; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;">${skill}</span>
+              `
+                )
+                .join("")}
+            </div>
+          </div>
+          
+          <!-- High Priority Recommendations -->
+          <div style="margin-bottom: 30px;">
+            <div style="background: #fee2e2; color: #dc2626; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px;">
+              <h3 style="font-size: 18px; margin: 0; font-weight: bold;">HIGH PRIORITY RECOMMENDATIONS</h3>
+            </div>
+            ${analysis.suggestions.recommendations["HIGH PRIORITY"]
+              .slice(0, 5)
+              .map(
+                (item, index) => `
+              <div style="margin-bottom: 20px; padding: 15px; background: #fef2f2; border-radius: 8px; border-left: 4px solid #dc2626;">
+                <h4 style="font-size: 16px; margin: 0 0 10px 0; color: #1f2937; font-weight: bold;">${
+                  index + 1
+                }. ${item.title}</h4>
+                <p style="font-size: 14px; margin: 0 0 10px 0; color: #4b5563;">${
+                  item.description
+                }</p>
+                <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid #e5e7eb;">
+                  <p style="font-size: 14px; margin: 0; color: #3b82f6; font-style: italic;">"${
+                    item.example
+                  }"</p>
+                </div>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+          
+          <!-- Next Steps -->
+          <div style="margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%); border-radius: 10px;">
+            <h3 style="font-size: 20px; margin: 0 0 15px 0; color: #0118D8; font-weight: bold;">Next Steps</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+              <div style="background: white; padding: 15px; border-radius: 8px;">
+                <p style="font-size: 14px; margin: 0; font-weight: bold; color: #1f2937;">1. Address High Priority Items</p>
+                <p style="font-size: 12px; margin: 5px 0 0 0; color: #6b7280;">Focus on critical improvements first</p>
+              </div>
+              <div style="background: white; padding: 15px; border-radius: 8px;">
+                <p style="font-size: 14px; margin: 0; font-weight: bold; color: #1f2937;">2. Practice Interview Skills</p>
+                <p style="font-size: 12px; margin: 5px 0 0 0; color: #6b7280;">Prepare for common interview questions</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Footer -->
+          <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+            <p style="font-size: 12px; color: #6b7280; margin: 0;">Generated by CoachAhead AI • ${new Date().getFullYear()}</p>
+            <p style="font-size: 11px; color: #9ca3af; margin: 5px 0 0 0;">coachahead.com</p>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(tempContainer);
+
+      // Generate PDF from HTML
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const pdfContent = tempContainer.querySelector(
+        "#pdf-content"
+      ) as HTMLElement;
+      if (pdfContent) {
+        const canvas = await html2canvas(pdfContent, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          backgroundColor: "#ffffff",
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        const imgWidth = pageWidth - 20;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+
+        const fileName = `coachahead_analysis_${analysis.extracted_data.personal_info.name.replace(
+          /\s+/g,
+          "_"
+        )}_${new Date().getTime()}.pdf`;
+        pdf.save(fileName);
+      }
+
+      document.body.removeChild(tempContainer);
+    } catch (error) {
+      console.error("Error generating screenshot PDF:", error);
+      generatePDFReport(); // Fallback to text PDF
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   };
 
   const toggleRecommendation = (priority: string, index: number) => {
@@ -344,6 +842,12 @@ export default function Analysis_Result() {
                       }
                     </span>
                   </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-blue-100">Report Date</span>
+                    <span className="text-lg">
+                      {new Date().toLocaleDateString()}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -352,9 +856,30 @@ export default function Analysis_Result() {
 
         {/* Action Buttons */}
         <div className="flex flex-wrap gap-4 justify-center mb-8">
-          <Button onClick={downloadReport} className="gap-2 bg-[#0118D8]">
-            <Download className="w-4 h-4" />
-            Download Report
+          <Button
+            onClick={generateScreenshotPDF}
+            className="gap-2 bg-[#0118D8]"
+            disabled={isGeneratingPDF}
+          >
+            {isGeneratingPDF ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                Generating PDF...
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4" />
+                Download PDF Report
+              </>
+            )}
+          </Button>
+          <Button
+            onClick={downloadReportJSON}
+            variant="outline"
+            className="gap-2"
+          >
+            <FileText className="w-4 h-4" />
+            Download JSON
           </Button>
           <Link href="/skill-analysis">
             <Button variant="outline" className="gap-2">

@@ -28,6 +28,10 @@ import {
   GraduationCap,
   Briefcase,
   Clock,
+  ChevronDown,
+  ChevronUp,
+  FileText,
+  Upload as UploadIcon,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -38,6 +42,13 @@ export default function SkillAnalysisPage() {
   const [error, setError] = useState<string | null>(null);
   const [recentRoles, setRecentRoles] = useState<string[]>([]);
   const [cvAvailable, setCvAvailable] = useState(false);
+
+  // State for expandable sections
+  const [showAllMatched, setShowAllMatched] = useState(false);
+  const [showAllMissing, setShowAllMissing] = useState(false);
+  const [showAllNiceToHave, setShowAllNiceToHave] = useState(false);
+  const [showAllCourses, setShowAllCourses] = useState(false);
+  const [showAllProjects, setShowAllProjects] = useState(false);
 
   // Check if CV is available and load recent roles
   useEffect(() => {
@@ -93,6 +104,13 @@ export default function SkillAnalysisPage() {
         saveRecentRole(targetRole);
         // Save analysis to localStorage for the results page
         localStorage.setItem("skill_analysis", JSON.stringify(data.analysis));
+
+        // Reset expandable sections
+        setShowAllMatched(false);
+        setShowAllMissing(false);
+        setShowAllNiceToHave(false);
+        setShowAllCourses(false);
+        setShowAllProjects(false);
       } else {
         setError(data.message || "Failed to analyze skills.");
       }
@@ -122,6 +140,12 @@ export default function SkillAnalysisPage() {
     element.click();
   };
 
+  // Helper function to get limited items for display
+  const getLimitedItems = (items: any[], limit: number, showAll: boolean) => {
+    if (!items) return [];
+    return showAll ? items : items.slice(0, limit);
+  };
+
   return (
     <div className="min-h-screen p-4 md:p-8 bg-gradient-to-b from-blue-50 to-white">
       <div className="max-w-6xl mx-auto">
@@ -148,6 +172,7 @@ export default function SkillAnalysisPage() {
                   CV Status
                 </CardTitle>
               </CardHeader>
+
               <CardContent>
                 <div
                   className={`p-4 rounded-lg ${
@@ -175,11 +200,25 @@ export default function SkillAnalysisPage() {
                   </div>
                 </div>
 
+                {/* Button when CV is NOT uploaded */}
                 {!cvAvailable && (
                   <Link href="/dashboard">
                     <Button className="w-full mt-4 gap-2 bg-blue-600 hover:bg-blue-700">
-                      <Upload className="w-4 h-4" />
+                      <UploadIcon className="w-4 h-4" />
                       Upload CV First
+                    </Button>
+                  </Link>
+                )}
+
+                {/* Button when CV IS uploaded */}
+                {cvAvailable && (
+                  <Link href="/dashboard">
+                    <Button
+                      variant="outline"
+                      className="w-full mt-4 gap-2 border-blue-600 text-blue-600 hover:bg-blue-50"
+                    >
+                      <UploadIcon className="w-4 h-4" />
+                      Change CV
                     </Button>
                   </Link>
                 )}
@@ -328,176 +367,325 @@ export default function SkillAnalysisPage() {
                   </CardContent>
                 </Card>
 
-                {/* Skills Grid */}
-                <div className="grid md:grid-cols-3 gap-6">
-                  {/* Matched Skills */}
-                  <Card className="shadow-lg border-0 border-t-4 border-green-500">
-                    <CardHeader className="pb-4">
-                      <CardTitle className="flex items-center justify-between">
+                {/* Skills Grid - Changed to rows */}
+                <div className="space-y-6">
+                  {/* Matched Skills Row */}
+                  <Card className="shadow-lg border-0">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                           <CheckCircle className="w-5 h-5 text-green-500" />
-                          <span className="text-gray-900">Matched Skills</span>
+                          <div>
+                            <h3 className="font-bold text-gray-900">
+                              Matched Skills
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                              Skills you already have
+                            </p>
+                          </div>
                         </div>
-                        <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
-                          {analysis.matched_skills?.length || 0}
-                        </span>
-                      </CardTitle>
-                      <CardDescription>Skills you already have</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        {analysis.matched_skills?.map(
-                          (skill: string, index: number) => (
-                            <div
-                              key={index}
-                              className="flex items-center gap-2 p-2 bg-green-50 rounded-lg"
+                        <div className="flex items-center gap-2">
+                          <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
+                            {analysis.matched_skills?.length || 0}
+                          </span>
+                          {analysis.matched_skills?.length > 3 && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setShowAllMatched(!showAllMatched)}
+                              className="text-blue-600 hover:text-blue-700"
                             >
-                              <CheckCircle className="w-4 h-4 text-green-500 shrink-0" />
-                              <span className="text-gray-700">{skill}</span>
-                            </div>
-                          )
-                        )}
+                              {showAllMatched ? (
+                                <>
+                                  <ChevronUp className="w-4 h-4 mr-1" />
+                                  Show Less
+                                </>
+                              ) : (
+                                <>
+                                  <ChevronDown className="w-4 h-4 mr-1" />
+                                  Show All
+                                </>
+                              )}
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        {getLimitedItems(
+                          analysis.matched_skills,
+                          3,
+                          showAllMatched
+                        ).map((skill: string, index: number) => (
+                          <div
+                            key={index}
+                            className="flex items-center gap-2 px-3 py-2 bg-green-50 rounded-lg border border-green-200"
+                          >
+                            <CheckCircle className="w-4 h-4 text-green-500 shrink-0" />
+                            <span className="text-gray-700 text-sm">
+                              {skill}
+                            </span>
+                          </div>
+                        ))}
                       </div>
                     </CardContent>
                   </Card>
 
-                  {/* Missing Skills */}
-                  <Card className="shadow-lg border-0 border-t-4 border-red-500">
-                    <CardHeader className="pb-4">
-                      <CardTitle className="flex items-center justify-between">
+                  {/* Missing Skills Row */}
+                  <Card className="shadow-lg border-0">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                           <XCircle className="w-5 h-5 text-red-500" />
-                          <span className="text-gray-900">Missing Skills</span>
+                          <div>
+                            <h3 className="font-bold text-gray-900">
+                              Missing Skills
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                              Skills to develop
+                            </p>
+                          </div>
                         </div>
-                        <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-semibold">
-                          {analysis.missing_skills?.length || 0}
-                        </span>
-                      </CardTitle>
-                      <CardDescription>Skills to develop</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        {analysis.missing_skills?.map(
-                          (skill: string, index: number) => (
-                            <div
-                              key={index}
-                              className="flex items-center gap-2 p-2 bg-red-50 rounded-lg"
+                        <div className="flex items-center gap-2">
+                          <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-semibold">
+                            {analysis.missing_skills?.length || 0}
+                          </span>
+                          {analysis.missing_skills?.length > 3 && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setShowAllMissing(!showAllMissing)}
+                              className="text-blue-600 hover:text-blue-700"
                             >
-                              <XCircle className="w-4 h-4 text-red-500 shrink-0" />
-                              <span className="text-gray-700">{skill}</span>
-                            </div>
-                          )
-                        )}
+                              {showAllMissing ? (
+                                <>
+                                  <ChevronUp className="w-4 h-4 mr-1" />
+                                  Show Less
+                                </>
+                              ) : (
+                                <>
+                                  <ChevronDown className="w-4 h-4 mr-1" />
+                                  Show All
+                                </>
+                              )}
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        {getLimitedItems(
+                          analysis.missing_skills,
+                          3,
+                          showAllMissing
+                        ).map((skill: string, index: number) => (
+                          <div
+                            key={index}
+                            className="flex items-center gap-2 px-3 py-2 bg-red-50 rounded-lg border border-red-200"
+                          >
+                            <XCircle className="w-4 h-4 text-red-500 shrink-0" />
+                            <span className="text-gray-700 text-sm">
+                              {skill}
+                            </span>
+                          </div>
+                        ))}
                       </div>
                     </CardContent>
                   </Card>
 
-                  {/* Nice-to-Have Skills */}
-                  <Card className="shadow-lg border-0 border-t-4 border-yellow-500">
-                    <CardHeader className="pb-4">
-                      <CardTitle className="flex items-center justify-between">
+                  {/* Nice-to-Have Skills Row */}
+                  <Card className="shadow-lg border-0">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                           <Star className="w-5 h-5 text-yellow-500" />
-                          <span className="text-gray-900">Nice-to-Have</span>
+                          <div>
+                            <h3 className="font-bold text-gray-900">
+                              Nice-to-Have Skills
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                              Bonus skills for advantage
+                            </p>
+                          </div>
                         </div>
-                        <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold">
-                          {analysis.nice_to_have_skills?.length || 0}
-                        </span>
-                      </CardTitle>
-                      <CardDescription>
-                        Bonus skills for advantage
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        {analysis.nice_to_have_skills?.map(
-                          (skill: string, index: number) => (
-                            <div
-                              key={index}
-                              className="flex items-center gap-2 p-2 bg-yellow-50 rounded-lg"
+                        <div className="flex items-center gap-2">
+                          <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold">
+                            {analysis.nice_to_have_skills?.length || 0}
+                          </span>
+                          {analysis.nice_to_have_skills?.length > 3 && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                setShowAllNiceToHave(!showAllNiceToHave)
+                              }
+                              className="text-blue-600 hover:text-blue-700"
                             >
-                              <Star className="w-4 h-4 text-yellow-500 shrink-0" />
-                              <span className="text-gray-700">{skill}</span>
-                            </div>
-                          )
-                        )}
+                              {showAllNiceToHave ? (
+                                <>
+                                  <ChevronUp className="w-4 h-4 mr-1" />
+                                  Show Less
+                                </>
+                              ) : (
+                                <>
+                                  <ChevronDown className="w-4 h-4 mr-1" />
+                                  Show All
+                                </>
+                              )}
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        {getLimitedItems(
+                          analysis.nice_to_have_skills,
+                          3,
+                          showAllNiceToHave
+                        ).map((skill: string, index: number) => (
+                          <div
+                            key={index}
+                            className="flex items-center gap-2 px-3 py-2 bg-yellow-50 rounded-lg border border-yellow-200"
+                          >
+                            <Star className="w-4 h-4 text-yellow-500 shrink-0" />
+                            <span className="text-gray-700 text-sm">
+                              {skill}
+                            </span>
+                          </div>
+                        ))}
                       </div>
                     </CardContent>
                   </Card>
                 </div>
 
-                {/* Recommendations */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  {/* Courses */}
+                {/* Recommendations Grid - Show as rows */}
+                <div className="space-y-6">
+                  {/* Courses Row */}
                   <Card className="shadow-lg border-0">
-                    <CardHeader className="pb-4">
-                      <CardTitle className="flex items-center gap-2 text-gray-900">
-                        <GraduationCap className="w-5 h-5" />
-                        Recommended Courses
-                      </CardTitle>
-                      <CardDescription>
-                        Learn the missing skills
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <GraduationCap className="w-5 h-5 text-blue-600" />
+                          <div>
+                            <h3 className="font-bold text-gray-900">
+                              Recommended Courses
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                              Learn the missing skills
+                            </p>
+                          </div>
+                        </div>
+                        {analysis.recommendations?.courses?.length > 3 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setShowAllCourses(!showAllCourses)}
+                            className="text-blue-600 hover:text-blue-700"
+                          >
+                            {showAllCourses ? (
+                              <>
+                                <ChevronUp className="w-4 h-4 mr-1" />
+                                Show Less
+                              </>
+                            ) : (
+                              <>
+                                <ChevronDown className="w-4 h-4 mr-1" />
+                                Show All (
+                                {analysis.recommendations.courses.length})
+                              </>
+                            )}
+                          </Button>
+                        )}
+                      </div>
+
                       <div className="space-y-3">
-                        {analysis.recommendations?.courses?.map(
-                          (course: string, index: number) => (
-                            <div
-                              key={index}
-                              className="group p-4 bg-gray-50 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
-                            >
-                              <div className="flex items-start gap-3">
-                                <BookOpen className="w-5 h-5 text-blue-600 mt-1 shrink-0" />
-                                <div>
-                                  <p className="font-medium text-gray-900">
-                                    {course}
-                                  </p>
-                                  <p className="text-sm text-gray-500 mt-1">
-                                    Online Course
-                                  </p>
-                                </div>
+                        {getLimitedItems(
+                          analysis.recommendations?.courses,
+                          3,
+                          showAllCourses
+                        ).map((course: string, index: number) => (
+                          <div
+                            key={index}
+                            className="group p-4 bg-gray-50 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                          >
+                            <div className="flex items-start gap-3">
+                              <BookOpen className="w-5 h-5 text-blue-600 mt-1 shrink-0" />
+                              <div>
+                                <p className="font-medium text-gray-900">
+                                  {course}
+                                </p>
+                                <p className="text-sm text-gray-500 mt-1">
+                                  Online Course
+                                </p>
                               </div>
                             </div>
-                          )
-                        )}
+                          </div>
+                        ))}
                       </div>
                     </CardContent>
                   </Card>
 
-                  {/* Projects */}
+                  {/* Projects Row */}
                   <Card className="shadow-lg border-0">
-                    <CardHeader className="pb-4">
-                      <CardTitle className="flex items-center gap-2 text-gray-900">
-                        <Briefcase className="w-5 h-5" />
-                        Project Ideas
-                      </CardTitle>
-                      <CardDescription>
-                        Practice with real projects
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <Briefcase className="w-5 h-5 text-green-600" />
+                          <div>
+                            <h3 className="font-bold text-gray-900">
+                              Project Ideas
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                              Practice with real projects
+                            </p>
+                          </div>
+                        </div>
+                        {analysis.recommendations?.projects?.length > 3 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setShowAllProjects(!showAllProjects)}
+                            className="text-blue-600 hover:text-blue-700"
+                          >
+                            {showAllProjects ? (
+                              <>
+                                <ChevronUp className="w-4 h-4 mr-1" />
+                                Show Less
+                              </>
+                            ) : (
+                              <>
+                                <ChevronDown className="w-4 h-4 mr-1" />
+                                Show All (
+                                {analysis.recommendations.projects.length})
+                              </>
+                            )}
+                          </Button>
+                        )}
+                      </div>
+
                       <div className="space-y-3">
-                        {analysis.recommendations?.projects?.map(
-                          (project: string, index: number) => (
-                            <div
-                              key={index}
-                              className="group p-4 bg-gray-50 hover:bg-green-50 rounded-lg transition-colors cursor-pointer"
-                            >
-                              <div className="flex items-start gap-3">
-                                <Rocket className="w-5 h-5 text-green-600 mt-1 shrink-0" />
-                                <div>
-                                  <p className="font-medium text-gray-900">
-                                    {project}
-                                  </p>
-                                  <p className="text-sm text-gray-500 mt-1">
-                                    Hands-on Project
-                                  </p>
-                                </div>
+                        {getLimitedItems(
+                          analysis.recommendations?.projects,
+                          3,
+                          showAllProjects
+                        ).map((project: string, index: number) => (
+                          <div
+                            key={index}
+                            className="group p-4 bg-gray-50 hover:bg-green-50 rounded-lg transition-colors cursor-pointer"
+                          >
+                            <div className="flex items-start gap-3">
+                              <Rocket className="w-5 h-5 text-green-600 mt-1 shrink-0" />
+                              <div>
+                                <p className="font-medium text-gray-900">
+                                  {project}
+                                </p>
+                                <p className="text-sm text-gray-500 mt-1">
+                                  Hands-on Project
+                                </p>
                               </div>
                             </div>
-                          )
-                        )}
+                          </div>
+                        ))}
                       </div>
                     </CardContent>
                   </Card>
@@ -519,7 +707,10 @@ export default function SkillAnalysisPage() {
                   </Link>
                   <Button
                     variant="ghost"
-                    onClick={() => setAnalysis(null)}
+                    onClick={() => {
+                      setAnalysis(null);
+                      setTargetRole("");
+                    }}
                     className="gap-2"
                   >
                     <Sparkles className="w-4 h-4" />
@@ -570,44 +761,3 @@ export default function SkillAnalysisPage() {
     </div>
   );
 }
-
-// Missing icon components
-const FileText = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-    <polyline points="14 2 14 8 20 8" />
-    <line x1="16" x2="8" y1="13" y2="13" />
-    <line x1="16" x2="8" y1="17" y2="17" />
-    <line x1="10" x2="8" y1="9" y2="9" />
-  </svg>
-);
-
-const Upload = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-    <polyline points="17 8 12 3 7 8" />
-    <line x1="12" x2="12" y1="3" y2="15" />
-  </svg>
-);
