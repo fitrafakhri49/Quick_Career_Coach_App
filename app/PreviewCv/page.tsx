@@ -738,7 +738,7 @@ export default function CVPreviewEditor() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-8 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-4 md:p-8 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading CV data...</p>
@@ -750,49 +750,49 @@ export default function CVPreviewEditor() {
   // No data found
   if (!cvData.personal_info.name) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-8">
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-4 md:p-8">
         <div className="max-w-4xl mx-auto text-center">
           <Card className="shadow-2xl border-0">
-            <CardContent className="p-12">
-              <div className="w-32 h-32 mx-auto rounded-full bg-blue-100 flex items-center justify-center mb-8">
-                <FileText className="w-20 h-20 text-blue-600" />
+            <CardContent className="p-6 md:p-12">
+              <div className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full bg-blue-100 flex items-center justify-center mb-6 md:mb-8">
+                <FileText className="w-12 h-12 md:w-20 md:h-20 text-blue-600" />
               </div>
 
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
                 No CV Data Found
               </h1>
 
-              <p className="text-gray-600 text-lg mb-8 max-w-xl mx-auto">
+              <p className="text-gray-600 text-base md:text-lg mb-6 md:mb-8 max-w-xl mx-auto px-4">
                 You need to upload and analyze your CV first to use the preview
                 and editor.
               </p>
 
               <div className="space-y-4">
-                <div className="bg-blue-50 p-6 rounded-xl">
-                  <h3 className="font-bold text-xl text-blue-800 mb-3">
+                <div className="bg-blue-50 p-4 md:p-6 rounded-xl">
+                  <h3 className="font-bold text-lg md:text-xl text-blue-800 mb-3">
                     How to get started:
                   </h3>
                   <ul className="space-y-3 text-left max-w-md mx-auto">
-                    <li className="flex items-center gap-3">
-                      <span className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center">
+                    <li className="flex items-center gap-3 text-sm md:text-base">
+                      <span className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center flex-shrink-0">
                         1
                       </span>
                       <span>Go to the Dashboard</span>
                     </li>
-                    <li className="flex items-center gap-3">
-                      <span className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center">
+                    <li className="flex items-center gap-3 text-sm md:text-base">
+                      <span className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center flex-shrink-0">
                         2
                       </span>
                       <span>Upload your CV/Resume</span>
                     </li>
-                    <li className="flex items-center gap-3">
-                      <span className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center">
+                    <li className="flex items-center gap-3 text-sm md:text-base">
+                      <span className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center flex-shrink-0">
                         3
                       </span>
                       <span>Get AI analysis</span>
                     </li>
-                    <li className="flex items-center gap-3">
-                      <span className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center">
+                    <li className="flex items-center gap-3 text-sm md:text-base">
+                      <span className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center flex-shrink-0">
                         4
                       </span>
                       <span>Come back here to preview and edit</span>
@@ -802,13 +802,13 @@ export default function CVPreviewEditor() {
 
                 <div className="space-y-4">
                   <a href="/dashboard">
-                    <Button className="gap-3 px-8 py-6 text-lg h-auto bg-[#0118D8] text-white hover:bg-[#1B4CFF] cursor-pointer">
-                      <Sparkles className="w-6 h-6" />
+                    <Button className="gap-3 px-6 py-4 md:px-8 md:py-6 text-base md:text-lg h-auto bg-[#0118D8] text-white hover:bg-[#1B4CFF] cursor-pointer w-full md:w-auto">
+                      <Sparkles className="w-5 h-5 md:w-6 md:h-6" />
                       Go to Dashboard to Upload CV
                     </Button>
                   </a>
 
-                  <p className="text-gray-500 text-sm">
+                  <p className="text-gray-500 text-xs md:text-sm">
                     Already uploaded? Check if the analysis was completed
                     successfully.
                   </p>
@@ -825,38 +825,46 @@ export default function CVPreviewEditor() {
   const PreviewView = () => (
     <div className="max-w-4xl mx-auto">
       <Card className="shadow-2xl border-0">
-        <CardContent className="p-8">
+        <CardContent className="p-4 md:p-8">
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
+          <div className="text-center mb-6 md:mb-8">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 break-words">
               {cvData.personal_info.name || "Your Name"}
             </h1>
-            <p className="text-lg text-blue-600 mt-2">
+            <p className="text-base md:text-lg text-blue-600 mt-2 break-words">
               {cvData.personal_info.title || "Professional"}
             </p>
-            <div className="flex flex-wrap justify-center gap-4 mt-4 text-gray-600">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-2 md:gap-4 mt-3 md:mt-4 text-gray-600 text-sm md:text-base">
               {cvData.personal_info.contact.email && (
-                <div className="flex items-center gap-1">
-                  <Mail className="w-4 h-4" />
-                  <span>{cvData.personal_info.contact.email}</span>
+                <div className="flex items-center justify-center gap-1">
+                  <Mail className="w-4 h-4 flex-shrink-0" />
+                  <span className="break-words text-center sm:text-left">
+                    {cvData.personal_info.contact.email}
+                  </span>
                 </div>
               )}
               {cvData.personal_info.contact.phone && (
-                <div className="flex items-center gap-1">
-                  <Phone className="w-4 h-4" />
-                  <span>{cvData.personal_info.contact.phone}</span>
+                <div className="flex items-center justify-center gap-1">
+                  <Phone className="w-4 h-4 flex-shrink-0" />
+                  <span className="break-words">
+                    {cvData.personal_info.contact.phone}
+                  </span>
                 </div>
               )}
               {cvData.personal_info.contact.location && (
-                <div className="flex items-center gap-1">
-                  <MapPin className="w-4 h-4" />
-                  <span>{cvData.personal_info.contact.location}</span>
+                <div className="flex items-center justify-center gap-1">
+                  <MapPin className="w-4 h-4 flex-shrink-0" />
+                  <span className="break-words">
+                    {cvData.personal_info.contact.location}
+                  </span>
                 </div>
               )}
               {cvData.personal_info.contact.linkedin && (
-                <div className="flex items-center gap-1">
-                  <Globe className="w-4 h-4" />
-                  <span>{cvData.personal_info.contact.linkedin}</span>
+                <div className="flex items-center justify-center gap-1">
+                  <Globe className="w-4 h-4 flex-shrink-0" />
+                  <span className="break-words">
+                    {cvData.personal_info.contact.linkedin}
+                  </span>
                 </div>
               )}
             </div>
@@ -864,12 +872,12 @@ export default function CVPreviewEditor() {
 
           {/* Summary */}
           {cvData.personal_info.summary && (
-            <div className="mb-8">
-              <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-4 flex items-center gap-2">
-                <User className="w-5 h-5" />
+            <div className="mb-6 md:mb-8">
+              <h2 className="text-lg md:text-xl font-bold text-gray-800 border-b pb-2 mb-3 md:mb-4 flex items-center gap-2">
+                <User className="w-4 h-4 md:w-5 md:h-5" />
                 Summary
               </h2>
-              <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed text-sm md:text-base">
                 {cvData.personal_info.summary}
               </p>
             </div>
@@ -877,16 +885,16 @@ export default function CVPreviewEditor() {
 
           {/* Skills */}
           {cvData.skills.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-4 flex items-center gap-2">
-                <Award className="w-5 h-5" />
+            <div className="mb-6 md:mb-8">
+              <h2 className="text-lg md:text-xl font-bold text-gray-800 border-b pb-2 mb-3 md:mb-4 flex items-center gap-2">
+                <Award className="w-4 h-4 md:w-5 md:h-5" />
                 Skills
               </h2>
               <div className="flex flex-wrap gap-2">
                 {cvData.skills.map((skill, index) => (
                   <span
                     key={index}
-                    className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                    className="px-2 py-1 md:px-3 md:py-1 bg-blue-100 text-blue-800 rounded-full text-xs md:text-sm break-words"
                   >
                     {skill}
                   </span>
@@ -897,39 +905,45 @@ export default function CVPreviewEditor() {
 
           {/* Work Experience */}
           {cvData.work_experience.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-4 flex items-center gap-2">
-                <Building className="w-5 h-5" />
+            <div className="mb-6 md:mb-8">
+              <h2 className="text-lg md:text-xl font-bold text-gray-800 border-b pb-2 mb-3 md:mb-4 flex items-center gap-2">
+                <Building className="w-4 h-4 md:w-5 md:h-5" />
                 Work Experience
               </h2>
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 {cvData.work_experience.map((work) => (
                   <div
                     key={work.id}
-                    className="border-l-4 border-blue-500 pl-4"
+                    className="border-l-2 md:border-l-4 border-blue-500 pl-3 md:pl-4"
                   >
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-bold text-gray-900 text-lg">
+                    <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
+                      <div className="flex-1">
+                        <h3 className="font-bold text-gray-900 text-base md:text-lg break-words">
                           {work.role}
                         </h3>
-                        <p className="text-blue-600 font-medium">
+                        <p className="text-blue-600 font-medium text-sm md:text-base break-words">
                           {work.company}
                         </p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-gray-600">{work.dates}</p>
-                        <p className="text-gray-500 text-sm">{work.location}</p>
+                      <div className="text-left md:text-right">
+                        <p className="text-gray-600 text-sm md:text-base">
+                          {work.dates}
+                        </p>
+                        <p className="text-gray-500 text-xs md:text-sm">
+                          {work.location}
+                        </p>
                       </div>
                     </div>
-                    <ul className="mt-3 space-y-1">
+                    <ul className="mt-2 md:mt-3 space-y-1">
                       {work.description.map((desc, idx) => (
                         <li
                           key={idx}
-                          className="text-gray-700 flex items-start gap-2"
+                          className="text-gray-700 flex items-start gap-2 text-sm md:text-base"
                         >
-                          <span className="text-blue-500 mt-1.5">•</span>
-                          <span>{desc}</span>
+                          <span className="text-blue-500 mt-1 md:mt-1.5 flex-shrink-0">
+                            •
+                          </span>
+                          <span className="break-words">{desc}</span>
                         </li>
                       ))}
                     </ul>
@@ -941,26 +955,36 @@ export default function CVPreviewEditor() {
 
           {/* Education */}
           {cvData.education.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-4 flex items-center gap-2">
-                <GraduationCap className="w-5 h-5" />
+            <div className="mb-6 md:mb-8">
+              <h2 className="text-lg md:text-xl font-bold text-gray-800 border-b pb-2 mb-3 md:mb-4 flex items-center gap-2">
+                <GraduationCap className="w-4 h-4 md:w-5 md:h-5" />
                 Education
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 {cvData.education.map((edu) => (
                   <div
                     key={edu.id}
-                    className="flex justify-between items-start"
+                    className="flex flex-col md:flex-row md:justify-between md:items-start gap-2"
                   >
-                    <div>
-                      <h3 className="font-bold text-gray-900">{edu.degree}</h3>
-                      <p className="text-gray-600">{edu.university}</p>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-gray-900 text-base md:text-lg break-words">
+                        {edu.degree}
+                      </h3>
+                      <p className="text-gray-600 text-sm md:text-base break-words">
+                        {edu.university}
+                      </p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-gray-600">{edu.year}</p>
-                      <p className="text-gray-500 text-sm">{edu.location}</p>
+                    <div className="text-left md:text-right">
+                      <p className="text-gray-600 text-sm md:text-base">
+                        {edu.year}
+                      </p>
+                      <p className="text-gray-500 text-xs md:text-sm">
+                        {edu.location}
+                      </p>
                       {edu.gpa && (
-                        <p className="text-gray-500 text-sm">GPA: {edu.gpa}</p>
+                        <p className="text-gray-500 text-xs md:text-sm">
+                          GPA: {edu.gpa}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -972,18 +996,18 @@ export default function CVPreviewEditor() {
           {/* Certifications */}
           {cvData.certifications.length > 0 && (
             <div>
-              <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-4 flex items-center gap-2">
-                <Award className="w-5 h-5" />
+              <h2 className="text-lg md:text-xl font-bold text-gray-800 border-b pb-2 mb-3 md:mb-4 flex items-center gap-2">
+                <Award className="w-4 h-4 md:w-5 md:h-5" />
                 Certifications
               </h2>
               <ul className="space-y-2">
                 {cvData.certifications.map((cert, index) => (
                   <li
                     key={index}
-                    className="text-gray-700 flex items-center gap-2"
+                    className="text-gray-700 flex items-center gap-2 text-sm md:text-base"
                   >
-                    <Check className="w-4 h-4 text-green-500" />
-                    <span>{cert}</span>
+                    <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
+                    <span className="break-words">{cert}</span>
                   </li>
                 ))}
               </ul>
@@ -996,19 +1020,19 @@ export default function CVPreviewEditor() {
 
   // Edit Component
   const EditView = () => (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-6 md:space-y-8">
       {/* Personal Info */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <User className="w-5 h-5" />
+          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+            <User className="w-4 h-4 md:w-5 md:h-5" />
             Personal Information
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                 Full Name *
               </label>
               <Input
@@ -1023,10 +1047,11 @@ export default function CVPreviewEditor() {
                   }))
                 }
                 placeholder="John Doe"
+                className="text-sm md:text-base"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                 Professional Title
               </label>
               <Input
@@ -1041,10 +1066,11 @@ export default function CVPreviewEditor() {
                   }))
                 }
                 placeholder="Software Engineer"
+                className="text-sm md:text-base"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                 Email *
               </label>
               <Input
@@ -1063,10 +1089,11 @@ export default function CVPreviewEditor() {
                 }
                 placeholder="john@example.com"
                 type="email"
+                className="text-sm md:text-base"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                 Phone
               </label>
               <Input
@@ -1084,10 +1111,11 @@ export default function CVPreviewEditor() {
                   }))
                 }
                 placeholder="+1 (123) 456-7890"
+                className="text-sm md:text-base"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                 Location
               </label>
               <Input
@@ -1105,10 +1133,11 @@ export default function CVPreviewEditor() {
                   }))
                 }
                 placeholder="San Francisco, CA"
+                className="text-sm md:text-base"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                 LinkedIn Profile
               </label>
               <Input
@@ -1126,11 +1155,12 @@ export default function CVPreviewEditor() {
                   }))
                 }
                 placeholder="linkedin.com/in/username"
+                className="text-sm md:text-base"
               />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
               Professional Summary
             </label>
             <textarea
@@ -1145,8 +1175,8 @@ export default function CVPreviewEditor() {
                 }))
               }
               placeholder="Experienced professional with expertise in..."
-              rows={4}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+              rows={3}
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm md:text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
             />
           </div>
         </CardContent>
@@ -1155,13 +1185,13 @@ export default function CVPreviewEditor() {
       {/* Skills */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Award className="w-5 h-5" />
+          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+            <Award className="w-4 h-4 md:w-5 md:h-5" />
             Skills
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Input
               value={newSkill}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -1171,25 +1201,28 @@ export default function CVPreviewEditor() {
               onKeyPress={(e: KeyboardEvent<HTMLInputElement>) =>
                 e.key === "Enter" && addSkill()
               }
-              className="flex-1"
+              className="flex-1 text-sm md:text-base"
             />
-            <Button onClick={addSkill} className="gap-2">
+            <Button onClick={addSkill} className="gap-2 w-full sm:w-auto">
               <Plus className="w-4 h-4" />
-              Add
+              <span className="hidden sm:inline">Add</span>
+              <span className="sm:hidden">Add Skill</span>
             </Button>
           </div>
           <div className="flex flex-wrap gap-2">
             {cvData.skills.map((skill, index) => (
               <div
                 key={index}
-                className="flex items-center gap-2 px-3 py-1 bg-blue-50 rounded-lg"
+                className="flex items-center gap-2 px-3 py-1 bg-blue-50 rounded-lg max-w-full"
               >
-                <span>{skill}</span>
+                <span className="text-sm md:text-base break-words max-w-[200px] sm:max-w-none">
+                  {skill}
+                </span>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => removeSkill(index)}
-                  className="h-6 w-6 p-0"
+                  className="h-6 w-6 p-0 flex-shrink-0"
                 >
                   <X className="w-3 h-3" />
                 </Button>
@@ -1202,12 +1235,15 @@ export default function CVPreviewEditor() {
       {/* Work Experience */}
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle className="flex items-center gap-2">
-              <Building className="w-5 h-5" />
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+            <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+              <Building className="w-4 h-4 md:w-5 md:h-5" />
               Work Experience
             </CardTitle>
-            <Button onClick={addWorkExperience} className="gap-2">
+            <Button
+              onClick={addWorkExperience}
+              className="gap-2 w-full sm:w-auto"
+            >
               <Plus className="w-4 h-4" />
               Add Experience
             </Button>
@@ -1216,12 +1252,12 @@ export default function CVPreviewEditor() {
         <CardContent className="space-y-6">
           {cvData.work_experience.map((work) => (
             <Card key={work.id} className="border">
-              <CardContent className="p-6 space-y-4">
-                <div className="flex justify-between items-start">
+              <CardContent className="p-4 md:p-6 space-y-4">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                   <div className="space-y-4 flex-1">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                           Job Title *
                         </label>
                         <Input
@@ -1234,10 +1270,11 @@ export default function CVPreviewEditor() {
                             )
                           }
                           placeholder="Senior Software Engineer"
+                          className="text-sm md:text-base"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                           Company *
                         </label>
                         <Input
@@ -1250,10 +1287,11 @@ export default function CVPreviewEditor() {
                             )
                           }
                           placeholder="Tech Company Inc."
+                          className="text-sm md:text-base"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                           Dates *
                         </label>
                         <Input
@@ -1266,10 +1304,11 @@ export default function CVPreviewEditor() {
                             )
                           }
                           placeholder="Jan 2020 - Present"
+                          className="text-sm md:text-base"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                           Location
                         </label>
                         <Input
@@ -1282,11 +1321,12 @@ export default function CVPreviewEditor() {
                             )
                           }
                           placeholder="Remote"
+                          className="text-sm md:text-base"
                         />
                       </div>
                     </div>
                     <div>
-                      <div className="flex justify-between items-center mb-3">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3">
                         <label className="block text-sm font-medium text-gray-700">
                           Responsibilities
                         </label>
@@ -1295,7 +1335,7 @@ export default function CVPreviewEditor() {
                           variant="outline"
                           size="sm"
                           onClick={() => addWorkDescription(work.id)}
-                          className="gap-1"
+                          className="gap-1 w-full sm:w-auto"
                         >
                           <Plus className="w-3 h-3" />
                           Add Point
@@ -1324,7 +1364,7 @@ export default function CVPreviewEditor() {
                                 onClick={() =>
                                   removeWorkDescription(work.id, idx)
                                 }
-                                className="mt-2"
+                                className="mt-2 flex-shrink-0"
                               >
                                 <Trash2 className="w-4 h-4 text-red-500" />
                               </Button>
@@ -1338,7 +1378,7 @@ export default function CVPreviewEditor() {
                     variant="ghost"
                     size="sm"
                     onClick={() => removeWorkExperience(work.id)}
-                    className="ml-4"
+                    className="self-end md:self-start md:ml-4"
                   >
                     <Trash2 className="w-4 h-4 text-red-500" />
                   </Button>
@@ -1352,12 +1392,12 @@ export default function CVPreviewEditor() {
       {/* Education */}
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle className="flex items-center gap-2">
-              <GraduationCap className="w-5 h-5" />
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+            <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+              <GraduationCap className="w-4 h-4 md:w-5 md:h-5" />
               Education
             </CardTitle>
-            <Button onClick={addEducation} className="gap-2">
+            <Button onClick={addEducation} className="gap-2 w-full sm:w-auto">
               <Plus className="w-4 h-4" />
               Add Education
             </Button>
@@ -1366,11 +1406,11 @@ export default function CVPreviewEditor() {
         <CardContent className="space-y-6">
           {cvData.education.map((edu) => (
             <Card key={edu.id} className="border">
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
+              <CardContent className="p-4 md:p-6">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 flex-1">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                         Degree *
                       </label>
                       <Input
@@ -1379,10 +1419,11 @@ export default function CVPreviewEditor() {
                           updateEducation(edu.id, "degree", e.target.value)
                         }
                         placeholder="Bachelor of Science in Computer Science"
+                        className="text-sm md:text-base"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                         University *
                       </label>
                       <Input
@@ -1391,10 +1432,11 @@ export default function CVPreviewEditor() {
                           updateEducation(edu.id, "university", e.target.value)
                         }
                         placeholder="University of Technology"
+                        className="text-sm md:text-base"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                         Year *
                       </label>
                       <Input
@@ -1403,10 +1445,11 @@ export default function CVPreviewEditor() {
                           updateEducation(edu.id, "year", e.target.value)
                         }
                         placeholder="2016 - 2020"
+                        className="text-sm md:text-base"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                         Location
                       </label>
                       <Input
@@ -1415,10 +1458,11 @@ export default function CVPreviewEditor() {
                           updateEducation(edu.id, "location", e.target.value)
                         }
                         placeholder="New York, NY"
+                        className="text-sm md:text-base"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <div className="sm:col-span-2 md:col-span-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-1 md:mb-2">
                         GPA
                       </label>
                       <Input
@@ -1427,6 +1471,7 @@ export default function CVPreviewEditor() {
                           updateEducation(edu.id, "gpa", e.target.value)
                         }
                         placeholder="3.8/4.0"
+                        className="text-sm md:text-base"
                       />
                     </div>
                   </div>
@@ -1434,7 +1479,7 @@ export default function CVPreviewEditor() {
                     variant="ghost"
                     size="sm"
                     onClick={() => removeEducation(edu.id)}
-                    className="ml-4"
+                    className="self-end md:self-start md:ml-4"
                   >
                     <Trash2 className="w-4 h-4 text-red-500" />
                   </Button>
@@ -1448,13 +1493,13 @@ export default function CVPreviewEditor() {
       {/* Certifications */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="w-5 h-5" />
+          <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+            <FileText className="w-4 h-4 md:w-5 md:h-5" />
             Certifications
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Input
               value={newCertification}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -1464,28 +1509,34 @@ export default function CVPreviewEditor() {
               onKeyPress={(e: KeyboardEvent<HTMLInputElement>) =>
                 e.key === "Enter" && addCertification()
               }
-              className="flex-1"
+              className="flex-1 text-sm md:text-base"
             />
-            <Button onClick={addCertification} className="gap-2">
+            <Button
+              onClick={addCertification}
+              className="gap-2 w-full sm:w-auto"
+            >
               <Plus className="w-4 h-4" />
-              Add
+              <span className="hidden sm:inline">Add</span>
+              <span className="sm:hidden">Add Certification</span>
             </Button>
           </div>
           <div className="space-y-3">
             {cvData.certifications.map((cert, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-100"
+                className="flex items-center justify-between p-3 md:p-4 bg-green-50 rounded-lg border border-green-100"
               >
-                <div className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-green-500" />
-                  <span>{cert}</span>
+                <div className="flex items-center gap-2 md:gap-3 overflow-hidden">
+                  <Check className="w-4 h-4 md:w-5 md:h-5 text-green-500 flex-shrink-0" />
+                  <span className="text-sm md:text-base break-words">
+                    {cert}
+                  </span>
                 </div>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => removeCertification(index)}
-                  className="h-8 w-8 p-0"
+                  className="h-8 w-8 p-0 flex-shrink-0 ml-2"
                 >
                   <Trash2 className="w-4 h-4 text-red-500" />
                 </Button>
@@ -1498,51 +1549,53 @@ export default function CVPreviewEditor() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-3 md:p-4 lg:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div className="flex flex-col gap-4 mb-6 md:mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-[#0118D8]">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#0118D8]">
               CV Editor & Preview
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 mt-1 md:mt-2 text-sm md:text-base">
               Edit your CV and see real-time preview
             </p>
             {cvData.personal_info.name && (
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-xs md:text-sm text-gray-500 mt-1">
                 Currently editing:{" "}
-                <span className="font-semibold">
+                <span className="font-semibold break-words">
                   {cvData.personal_info.name}
                 </span>
               </p>
             )}
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col gap-3">
             {/* Mode Toggle */}
-            <div className="flex items-center gap-2 bg-white rounded-lg border p-1">
+            <div className="flex items-center bg-white rounded-lg border p-1 self-start">
               <Button
                 variant={editMode === "preview" ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setEditMode("preview")}
-                className={`gap-2 ${
+                className={`gap-2 text-xs md:text-sm ${
                   editMode === "preview" ? "bg-blue-100 text-blue-700" : ""
                 }`}
               >
-                <Eye className="w-4 h-4" />
-                Preview
+                <Eye className="w-3 h-3 md:w-4 md:h-4" />
+                <span className="hidden xs:inline">Preview</span>
+                <span className="xs:hidden">View</span>
               </Button>
               <Button
                 variant={editMode === "edit" ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setEditMode("edit")}
-                className={`gap-2 ${
+                className={`gap-2 text-xs md:text-sm ${
                   editMode === "edit" ? "bg-blue-100 text-blue-700" : ""
                 }`}
               >
-                <Edit className="w-4 h-4" />
-                Edit
+                <Edit className="w-3 h-3 md:w-4 md:h-4" />
+                <span className="hidden xs:inline">Edit</span>
+                <span className="xs:hidden">Edit</span>
               </Button>
             </div>
 
@@ -1551,10 +1604,16 @@ export default function CVPreviewEditor() {
               <Button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="gap-2 bg-green-600 hover:bg-green-700"
+                className="gap-2 bg-green-600 hover:bg-green-700 text-xs md:text-sm flex-1 sm:flex-none"
+                size="sm"
               >
-                <Save className="w-4 h-4" />
-                {isSaving ? "Saving..." : "Save Changes"}
+                <Save className="w-3 h-3 md:w-4 md:h-4" />
+                <span className="hidden sm:inline">
+                  {isSaving ? "Saving..." : "Save Changes"}
+                </span>
+                <span className="sm:hidden">
+                  {isSaving ? "Saving..." : "Save"}
+                </span>
               </Button>
 
               {/* Reanalyze Button - Only shown in preview mode */}
@@ -1562,76 +1621,91 @@ export default function CVPreviewEditor() {
                 <Button
                   onClick={handleReanalyzeCV}
                   disabled={isReanalyzing}
-                  className="gap-2 bg-purple-600 hover:bg-purple-700"
+                  className="gap-2 bg-purple-600 hover:bg-purple-700 text-xs md:text-sm flex-1 sm:flex-none"
+                  size="sm"
                 >
                   {isReanalyzing ? (
                     <>
-                      <RefreshCw className="w-4 h-4 animate-spin" />
-                      Reanalyzing... {reanalyzeProgress}%
+                      <RefreshCw className="w-3 h-3 md:w-4 md:h-4 animate-spin" />
+                      <span className="hidden sm:inline">
+                        Reanalyzing... {reanalyzeProgress}%
+                      </span>
+                      <span className="sm:hidden">{reanalyzeProgress}%</span>
                     </>
                   ) : (
                     <>
-                      <Target className="w-4 h-4" />
-                      Reanalyze CV with AI
+                      <Target className="w-3 h-3 md:w-4 md:h-4" />
+                      <span className="hidden sm:inline">Reanalyze CV</span>
+                      <span className="sm:hidden">Reanalyze</span>
                     </>
                   )}
                 </Button>
               )}
 
-              <Button onClick={exportToPDF} variant="outline" className="gap-2">
-                <Download className="w-4 h-4" />
-                Export PDF
+              <Button
+                onClick={exportToPDF}
+                variant="outline"
+                className="gap-2 text-xs md:text-sm flex-1 sm:flex-none"
+                size="sm"
+              >
+                <Download className="w-3 h-3 md:w-4 md:h-4" />
+                <span className="hidden sm:inline">Export PDF</span>
+                <span className="sm:hidden">PDF</span>
               </Button>
 
               <Button
                 onClick={() => window.print()}
                 variant="outline"
-                className="gap-2"
+                className="gap-2 text-xs md:text-sm flex-1 sm:flex-none"
+                size="sm"
               >
-                <Printer className="w-4 h-4" />
-                Print
+                <Printer className="w-3 h-3 md:w-4 md:h-4" />
+                <span className="hidden sm:inline">Print</span>
+                <span className="sm:hidden">Print</span>
               </Button>
             </div>
           </div>
         </div>
 
         {/* Content */}
-        {editMode === "preview" ? <PreviewView /> : <EditView />}
+        <div className="mb-6 md:mb-8">
+          {editMode === "preview" ? <PreviewView /> : <EditView />}
+        </div>
 
         {/* Tips with Reanalyze Explanation */}
-        <Card className="mt-8 border-0 bg-gradient-to-r from-blue-50 to-indigo-50">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Sparkles className="w-5 h-5 text-blue-600" />
-              <h3 className="font-bold text-lg text-blue-800">
+        <Card className="border-0 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+              <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
+              <h3 className="font-bold text-base md:text-lg text-blue-800">
                 Tips for a Great CV
               </h3>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="p-4 bg-white/50 rounded-lg">
-                  <h4 className="font-semibold text-gray-800 mb-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+              <div className="space-y-3 md:space-y-4">
+                <div className="p-3 md:p-4 bg-white/50 rounded-lg">
+                  <h4 className="font-semibold text-gray-800 text-sm md:text-base mb-1 md:mb-2">
                     Use Action Verbs
                   </h4>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-xs md:text-sm text-gray-600">
                     Start bullet points with strong verbs like "Developed",
                     "Managed", "Increased"
                   </p>
                 </div>
-                <div className="p-4 bg-white/50 rounded-lg">
-                  <h4 className="font-semibold text-gray-800 mb-2">
+                <div className="p-3 md:p-4 bg-white/50 rounded-lg">
+                  <h4 className="font-semibold text-gray-800 text-sm md:text-base mb-1 md:mb-2">
                     Quantify Results
                   </h4>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-xs md:text-sm text-gray-600">
                     Include numbers and metrics to show your impact and
                     achievements
                   </p>
                 </div>
-                <div className="p-4 bg-white/50 rounded-lg">
-                  <h4 className="font-semibold text-gray-800 mb-2">
+                <div className="p-3 md:p-4 bg-white/50 rounded-lg">
+                  <h4 className="font-semibold text-gray-800 text-sm md:text-base mb-1 md:mb-2">
                     Tailor for Jobs
                   </h4>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-xs md:text-sm text-gray-600">
                     Customize your CV for each job application by highlighting
                     relevant experience
                   </p>
@@ -1639,51 +1713,51 @@ export default function CVPreviewEditor() {
               </div>
 
               {/* Reanalyze Info Section */}
-              <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-6 rounded-xl border border-purple-100">
-                <div className="flex items-center gap-3 mb-4">
-                  <Target className="w-6 h-6 text-purple-600" />
-                  <h4 className="font-bold text-lg text-purple-800">
+              <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-4 md:p-6 rounded-xl border border-purple-100">
+                <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+                  <Target className="w-5 h-5 md:w-6 md:h-6 text-purple-600" />
+                  <h4 className="font-bold text-base md:text-lg text-purple-800">
                     Get AI Feedback on Your Edits
                   </h4>
                 </div>
-                <p className="text-gray-700 mb-4">
+                <p className="text-gray-700 text-sm md:text-base mb-3 md:mb-4">
                   After making changes to your CV, click "Reanalyze CV with AI"
                   to get:
                 </p>
-                <ul className="space-y-3">
+                <ul className="space-y-2 md:space-y-3">
                   <li className="flex items-start gap-2">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
-                    <span className="text-gray-700">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <span className="text-gray-700 text-sm md:text-base">
                       Updated score and recommendations
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
-                    <span className="text-gray-700">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <span className="text-gray-700 text-sm md:text-base">
                       Analysis of your new improvements
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
-                    <span className="text-gray-700">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <span className="text-gray-700 text-sm md:text-base">
                       Suggestions for further optimization
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
-                    <span className="text-gray-700">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <span className="text-gray-700 text-sm md:text-base">
                       Track your CV's improvement over time
                     </span>
                   </li>
                 </ul>
-                <div className="mt-6 p-4 bg-white/70 rounded-lg border">
-                  <div className="flex items-center gap-3">
-                    <RefreshCw className="w-5 h-5 text-blue-600" />
+                <div className="mt-4 md:mt-6 p-3 md:p-4 bg-white/70 rounded-lg border">
+                  <div className="flex items-center gap-2 md:gap-3">
+                    <RefreshCw className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
                     <div>
-                      <p className="font-semibold text-gray-800">
+                      <p className="font-semibold text-gray-800 text-sm md:text-base">
                         How it works:
                       </p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-xs md:text-sm text-gray-600">
                         1. Edit your CV → 2. Save changes → 3. Click "Reanalyze"
                         → 4. Get new AI feedback
                       </p>

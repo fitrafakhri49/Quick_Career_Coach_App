@@ -349,7 +349,7 @@ export default function InterviewPage() {
   const renderContent = () => {
     if (isCheckingSavedData) {
       return (
-        <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="flex justify-center items-center min-h-[60vh] px-4">
           <div className="text-center">
             <LoadingSpinner size="lg" />
             <p className="mt-4 text-gray-600">Checking for saved data...</p>
@@ -361,23 +361,13 @@ export default function InterviewPage() {
     switch (stage) {
       case "start":
         return (
-          <div>
-            {/* Test Data Button */}
-            {process.env.NODE_ENV === "development" && (
-              <div className="max-w-4xl mx-auto mb-6">
-                <button
-                  onClick={loadTestFeedbackData}
-                  className="w-full px-4 py-3 bg-purple-100 text-purple-700 rounded-lg font-medium hover:bg-purple-200 transition-colors border border-purple-300"
-                >
-                  🧪 Load Test Feedback Data (Development Only)
-                </button>
-                <p className="text-xs text-gray-500 mt-1 text-center">
-                  This button only appears in development mode
-                </p>
-              </div>
-            )}
-
-            <InterviewStart onStart={handleStartInterview} loading={loading} />
+          <div className="w-full">
+            <div className="px-4">
+              <InterviewStart
+                onStart={handleStartInterview}
+                loading={loading}
+              />
+            </div>
           </div>
         );
 
@@ -387,7 +377,7 @@ export default function InterviewPage() {
           currentQuestionIndex >= questions.length
         ) {
           return (
-            <div className="flex justify-center items-center min-h-[60vh]">
+            <div className="flex justify-center items-center min-h-[60vh] px-4">
               <div className="text-center">
                 <LoadingSpinner size="lg" />
                 <p className="mt-4 text-gray-600">Loading questions...</p>
@@ -399,17 +389,17 @@ export default function InterviewPage() {
         const currentQuestion = questions[currentQuestionIndex];
 
         return (
-          <div>
+          <div className="w-full">
             {/* Question Navigation */}
             {questions.length > 1 && (
-              <div className="max-w-4xl mx-auto px-6 mb-4">
-                <div className="bg-white rounded-lg shadow p-4">
-                  <div className="flex justify-center space-x-2">
+              <div className="max-w-4xl mx-auto px-4 sm:px-6 mb-4">
+                <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+                  <div className="flex flex-wrap justify-center gap-2">
                     {questions.map((q, index) => (
                       <button
                         key={q.id}
                         onClick={() => handleNavigateToQuestion(index + 1)}
-                        className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors ${
                           index === currentQuestionIndex
                             ? "bg-blue-600 text-white"
                             : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -424,20 +414,22 @@ export default function InterviewPage() {
             )}
 
             {/* Current Question */}
-            <InterviewQuestion
-              sessionId={sessionId}
-              question={currentQuestion}
-              current={currentQuestionIndex + 1}
-              total={3}
-              onSubmitAnswer={handleSubmitAnswer}
-              loading={loading}
-            />
+            <div className="px-4">
+              <InterviewQuestion
+                sessionId={sessionId}
+                question={currentQuestion}
+                current={currentQuestionIndex + 1}
+                total={3}
+                onSubmitAnswer={handleSubmitAnswer}
+                loading={loading}
+              />
+            </div>
           </div>
         );
 
       case "feedback":
         return (
-          <div>
+          <div className="w-full px-4">
             <InterviewFeedback
               feedback={feedback}
               role={role}
@@ -458,10 +450,10 @@ export default function InterviewPage() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-3">
-              <h1 className="text-xl font-bold text-gray-900">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-3 sm:py-4 space-y-2 sm:space-y-0">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3">
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900">
                 {stage === "start"
                   ? "Quick Career Coach"
                   : stage === "questions"
@@ -469,31 +461,39 @@ export default function InterviewPage() {
                   : "Interview Results"}
               </h1>
 
-              {stage === "questions" && (
-                <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                  Question {currentQuestionIndex + 1} of 3
-                </span>
-              )}
+              <div className="flex flex-wrap items-center gap-2 mt-1 sm:mt-0">
+                {stage === "questions" && (
+                  <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                    Question {currentQuestionIndex + 1} of 3
+                  </span>
+                )}
 
-              {stage === "feedback" && (
-                <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                  Score: {feedback.overall_score.toFixed(1)}/10
-                </span>
-              )}
+                {stage === "feedback" && (
+                  <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                    Score: {feedback.overall_score.toFixed(1)}/10
+                  </span>
+                )}
+
+                {stage === "questions" && sessionId && (
+                  <span className="text-xs text-gray-500 font-medium sm:hidden">
+                    ID: {sessionId.slice(0, 6)}...
+                  </span>
+                )}
+              </div>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3 sm:space-x-4 w-full sm:w-auto justify-between sm:justify-normal">
               {stage !== "start" && (
                 <button
                   onClick={handleRestartInterview}
-                  className="text-sm text-gray-600 hover:text-gray-900 font-medium cursor-pointer"
+                  className="text-sm text-gray-600 hover:text-gray-900 font-medium cursor-pointer whitespace-nowrap"
                 >
                   New Interview
                 </button>
               )}
 
               {stage === "questions" && sessionId && (
-                <div className="text-sm text-gray-500">
+                <div className="text-xs sm:text-sm text-gray-500 hidden sm:block">
                   Session: {sessionId.slice(0, 8)}...
                 </div>
               )}
@@ -514,15 +514,15 @@ export default function InterviewPage() {
 
       {/* Resume Session Banner */}
       {stage === "start" && hasSession && !isCheckingSavedData && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg">
-            <div className="flex justify-between items-center">
-              <span>
+        <div className="w-full px-4 sm:px-6 lg:px-8 mt-3 sm:mt-4">
+          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-3 sm:px-4 py-3 rounded-lg">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+              <span className="text-sm sm:text-base">
                 You have an interview in progress. Would you like to resume?
               </span>
               <button
                 onClick={handleResumeInterview}
-                className="ml-4 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700"
+                className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 whitespace-nowrap w-full sm:w-auto"
               >
                 Resume Interview
               </button>
@@ -533,13 +533,13 @@ export default function InterviewPage() {
 
       {/* Error Display */}
       {error && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-            <div className="flex justify-between items-center">
-              <span>{error}</span>
+        <div className="w-full px-4 sm:px-6 lg:px-8 mt-3 sm:mt-4">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-3 sm:px-4 py-3 rounded-lg">
+            <div className="flex justify-between items-start sm:items-center">
+              <span className="text-sm sm:text-base pr-2">{error}</span>
               <button
                 onClick={clearError}
-                className="text-red-700 hover:text-red-900"
+                className="text-red-700 hover:text-red-900 flex-shrink-0"
               >
                 ✕
               </button>
@@ -549,12 +549,12 @@ export default function InterviewPage() {
       )}
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {loading ? (
-          <div className="flex justify-center items-center min-h-[60vh]">
+          <div className="flex justify-center items-center min-h-[50vh] sm:min-h-[60vh]">
             <div className="text-center">
               <LoadingSpinner size="lg" />
-              <p className="mt-4 text-gray-600">
+              <p className="mt-4 text-gray-600 text-sm sm:text-base">
                 {stage === "start"
                   ? "Starting your interview..."
                   : stage === "questions"
@@ -569,9 +569,9 @@ export default function InterviewPage() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-12 border-t border-gray-200 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <footer className="mt-8 sm:mt-12 border-t border-gray-200 bg-white">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             <div>
               <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wider">
                 Quick Career Coach
@@ -585,7 +585,7 @@ export default function InterviewPage() {
               <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wider">
                 Features
               </h3>
-              <ul className="mt-2 space-y-2">
+              <ul className="mt-2 space-y-1.5">
                 <li className="text-sm text-gray-500">
                   • Tailored interview questions
                 </li>
@@ -616,7 +616,7 @@ export default function InterviewPage() {
             </div>
           </div>
 
-          <div className="mt-8 pt-8 border-t border-gray-200 text-center">
+          <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-gray-200 text-center">
             <p className="text-xs text-gray-500">
               © {new Date().getFullYear()} Quick Career Coach. Practice makes
               perfect!
