@@ -23,7 +23,11 @@ export const InterviewFeedback = ({
   const [expandedQuestion, setExpandedQuestion] = useState<number | null>(0);
   const [isPrinting, setIsPrinting] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
-
+  const [showAll, setShowAll] = useState(false);
+  const strengths = feedback?.strengths || [];
+  const visibleStrengths = showAll ? strengths : strengths.slice(0, 3);
+  const areas = feedback?.areas_for_improvement || [];
+  const visibleAreas = showAll ? areas : areas.slice(0, 3);
   // Key for localStorage
   const STORAGE_KEY = "interview_feedback_data";
 
@@ -524,25 +528,6 @@ Quick Career Coach - AI Interview Practice
         </div>
 
         {/* Saved Feedback Indicator */}
-        {hasSavedFeedback() && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between">
-            <div className="flex items-center">
-              <span className="text-green-600 mr-2">✅</span>
-              <span className="text-green-800 text-sm">
-                Feedback saved locally. You can return to this page anytime.
-              </span>
-            </div>
-            <button
-              onClick={() => {
-                clearSavedFeedback();
-                alert("Saved feedback cleared.");
-              }}
-              className="text-xs text-red-600 hover:text-red-800 no-print"
-            >
-              Clear
-            </button>
-          </div>
-        )}
 
         {/* No Feedback Available Warning */}
         {overallScore === 0 && (
@@ -611,24 +596,38 @@ Quick Career Coach - AI Interview Practice
                 Key Strengths
               </h3>
             </div>
-            {feedback.strengths && feedback.strengths.length > 0 ? (
-              <ul className="space-y-3">
-                {feedback.strengths.map((strength, index) => (
-                  <li key={index} className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">•</span>
-                    <span className="text-gray-700">{strength}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
+
+            {strengths.length === 0 ? (
               <p className="text-gray-500 italic">
                 No specific strengths identified yet.
               </p>
+            ) : (
+              <>
+                {/* Hanya render yang terlihat, tanpa wrapper yang kasih tinggi tetap */}
+                <ul className="space-y-3">
+                  {visibleStrengths.map((strength, index) => (
+                    <li key={index} className="flex items-start font-semibold">
+                      <span className="text-green-500 mr-2 mt-1">•</span>
+                      <span className="text-gray-700">{strength}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Tombol hanya muncul kalau item > 3 */}
+                {strengths.length > 3 && (
+                  <button
+                    onClick={() => setShowAll(!showAll)}
+                    className="mt-4 text-green-600 font-medium hover:underline cursor-pointer"
+                  >
+                    {showAll ? "Show Less" : "Show All"}
+                  </button>
+                )}
+              </>
             )}
           </div>
 
           {/* Areas for Improvement */}
-          <div className="bg-white rounded-lg shadow p-6 print-no-border print-shadow-none">
+          <div className="bg-white rounded-lg shadow p-6 print-no-border print-shadow-none h-auto">
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
                 <span className="text-yellow-600 text-xl">📈</span>
@@ -637,20 +636,31 @@ Quick Career Coach - AI Interview Practice
                 Areas for Improvement
               </h3>
             </div>
-            {feedback.areas_for_improvement &&
-            feedback.areas_for_improvement.length > 0 ? (
-              <ul className="space-y-3">
-                {feedback.areas_for_improvement.map((area, index) => (
-                  <li key={index} className="flex items-start">
-                    <span className="text-yellow-500 mr-2 mt-1">•</span>
-                    <span className="text-gray-700">{area}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
+
+            {areas.length === 0 ? (
               <p className="text-gray-500 italic">
                 No specific improvement areas identified yet.
               </p>
+            ) : (
+              <>
+                <ul className="space-y-3">
+                  {visibleAreas.map((area, index) => (
+                    <li key={index} className="flex items-start font-semibold">
+                      <span className="text-yellow-500 mr-2 mt-1">•</span>
+                      <span className="text-gray-700">{area}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {areas.length > 3 && (
+                  <button
+                    onClick={() => setShowAll(!showAll)}
+                    className="mt-4 text-yellow-600 font-medium hover:underline cursor-pointer"
+                  >
+                    {showAll ? "Show Less" : "Show All"}
+                  </button>
+                )}
+              </>
             )}
           </div>
         </div>

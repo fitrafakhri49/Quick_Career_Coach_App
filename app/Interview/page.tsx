@@ -438,25 +438,6 @@ export default function InterviewPage() {
       case "feedback":
         return (
           <div>
-            {/* Saved Feedback Banner */}
-            <div className="max-w-4xl mx-auto mb-6">
-              <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg flex items-center justify-between">
-                <div className="flex items-center">
-                  <span className="mr-2">✅</span>
-                  <span>
-                    Loading saved feedback. This data is stored locally in your
-                    browser.
-                  </span>
-                </div>
-                <button
-                  onClick={handleClearFeedback}
-                  className="text-sm text-blue-700 hover:text-blue-900 font-medium"
-                >
-                  Clear Feedback
-                </button>
-              </div>
-            </div>
-
             <InterviewFeedback
               feedback={feedback}
               role={role}
@@ -505,7 +486,7 @@ export default function InterviewPage() {
               {stage !== "start" && (
                 <button
                   onClick={handleRestartInterview}
-                  className="text-sm text-gray-600 hover:text-gray-900 font-medium"
+                  className="text-sm text-gray-600 hover:text-gray-900 font-medium cursor-pointer"
                 >
                   New Interview
                 </button>
@@ -544,32 +525,6 @@ export default function InterviewPage() {
                 className="ml-4 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700"
               >
                 Resume Interview
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Saved Feedback Notice */}
-      {stage === "feedback" && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <span className="mr-2">💾</span>
-                <span>
-                  Your interview results are saved locally. You can bookmark
-                  this page and return anytime.
-                </span>
-              </div>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
-                  alert("Link copied to clipboard!");
-                }}
-                className="ml-4 px-3 py-1 bg-green-100 text-green-700 text-sm font-medium rounded hover:bg-green-200"
-              >
-                Copy Link
               </button>
             </div>
           </div>
